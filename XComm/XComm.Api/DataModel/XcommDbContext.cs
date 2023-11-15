@@ -46,9 +46,19 @@ namespace XComm.Api.DataModel
             modelBuilder.Entity<Products>()
                 .Property(o => o.Stock)
                 .HasColumnType("decimal(18,4)");
+
+            modelBuilder.Entity<OrderHeader>()
+                .Property(o => o.Amount)
+                .HasColumnType("decimal(18,4)");
+
+            modelBuilder.Entity<OrderDetails>()
+                .Property(o => o.Price)
+                .HasColumnType("decimal(18,4)");
+
+            modelBuilder.Entity<OrderDetails>()
+                .Property(o => o.Quantity)
+                .HasColumnType("decimal(18,4)");
         }
 
     }
-
-
 }
