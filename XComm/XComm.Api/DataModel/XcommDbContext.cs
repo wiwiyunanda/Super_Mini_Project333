@@ -9,16 +9,46 @@ namespace XComm.Api.DataModel
         }
 
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Variants> Variants { get; set; }
+        public DbSet<Products> Products { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //base.OnConfiguring(optionsBuilder);
-            IConfigurationRoot builder = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json")
-                .Build();
+            //base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Category>()
+                .HasIndex(o => o.Initial)
+                .IsUnique();
 
-            optionsBuilder.UseSqlServer(builder.GetConnectionString("Db_Conn"));
+            modelBuilder.Entity<Category>()
+                .HasIndex(o => o.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Variants>()
+                .HasIndex(o => o.Initial)
+                .IsUnique();
+
+            modelBuilder.Entity<Category>()
+                .HasIndex(o => o.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Products>()
+                .HasIndex(o => o.Initial)
+                .IsUnique();
+
+            modelBuilder.Entity<Products>()
+                .HasIndex(o => o.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Products>()
+                .Property(o => o.Price)
+                .HasColumnType("decimal(18,4)");
+
+            modelBuilder.Entity<Products>()
+                .Property(o => o.Stock)
+                .HasColumnType("decimal(18,4)");
         }
+
     }
+
+
 }
