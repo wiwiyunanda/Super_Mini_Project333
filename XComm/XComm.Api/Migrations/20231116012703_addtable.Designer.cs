@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XComm.Api.DataModel;
 
@@ -11,9 +12,11 @@ using XComm.Api.DataModel;
 namespace XComm.Api.Migrations
 {
     [DbContext(typeof(XcommDbContext))]
-    partial class XcommDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231116012703_addtable")]
+    partial class addtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,7 +177,7 @@ namespace XComm.Api.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("MasterFileCollections");
+                    b.ToTable("MasterFileCollecitons");
                 });
 
             modelBuilder.Entity("XComm.Api.DataModel.OrderDetails", b =>

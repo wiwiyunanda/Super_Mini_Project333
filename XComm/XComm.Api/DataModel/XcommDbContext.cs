@@ -11,6 +11,11 @@ namespace XComm.Api.DataModel
         public DbSet<Category> Categories { get; set; }
         public DbSet<Variants> Variants { get; set; }
         public DbSet<Products> Products { get; set; }
+        public DbSet<OrderHeader> OrderHeaders { get; set; }
+        public DbSet<OrderDetails> OrderDetail { get; set; }
+        public DbSet<FileCollections> FileCollection { get; set; }
+        public DbSet<Account> Account { get; set; }
+        public DbSet<UserRoles> UserRole { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +43,21 @@ namespace XComm.Api.DataModel
             modelBuilder.Entity<Products>()
                 .HasIndex(o => o.Name)
                 .IsUnique();
+            modelBuilder.Entity<OrderHeader>()
+               .HasIndex(o => o.Reference)
+               .IsUnique();
+
+            modelBuilder.Entity<FileCollections>()
+                .HasIndex(o => o.Title)
+                .IsUnique();
+
+            modelBuilder.Entity<FileCollections>()
+                .HasIndex(o => o.FileName)
+                .IsUnique();
+
+            modelBuilder.Entity<Account>()
+                .HasIndex(o => o.UserName)
+                .IsUnique();
 
             modelBuilder.Entity<Products>()
                 .Property(o => o.Price)
@@ -59,6 +79,5 @@ namespace XComm.Api.DataModel
                 .Property(o => o.Quantity)
                 .HasColumnType("decimal(18,4)");
         }
-
     }
 }
