@@ -15,7 +15,7 @@ namespace XComm.Api.DataModel
     }
 
     [Table("TransOrderDetails")]
-    public class OrderDetails: BaseSchema
+    public class OrderDetail: BaseSchema
     {
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -1,14 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace XComm.Api.DataModel
+namespace ViewModel
 {
-    //Inheritance
-    //Entity Category
-    [Table("MasterCategories")]
-    public class Category: BaseSchema
+    public class CategoryViewModel
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         [Required, MaxLength(10)]
         public string Initial { get; set; }

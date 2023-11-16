@@ -4,21 +4,32 @@ namespace XComm.Api.DataModel
 {
     public class XcommDbContext: DbContext
     {
-        public XcommDbContext(DbContextOptions<XcommDbContext> options): base(options)
-        {            
+        public XcommDbContext(DbContextOptions<XcommDbContext> options) : base(options)
+        {
         }
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Variants> Variants { get; set; }
         public DbSet<Products> Products { get; set; }
         public DbSet<OrderHeader> OrderHeaders { get; set; }
-        public DbSet<OrderDetails> OrderDetail { get; set; }
+        public DbSet<OrderDetail> OrderDetails{ get; set; }
         public DbSet<FileCollections> FileCollection { get; set; }
         public DbSet<Account> Account { get; set; }
         public DbSet<UserRoles> UserRole { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            //base.Onconfiguring(optionsBuilder)
+            IConfigurationRoot builder = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json")
+                .Build();
+            optionsBuilder.UseSqlServer(builder.GetConnectionString("Db_Conn"));
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             //base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Category>()
                 .HasIndex(o => o.Initial)
@@ -71,11 +82,11 @@ namespace XComm.Api.DataModel
                 .Property(o => o.Amount)
                 .HasColumnType("decimal(18,4)");
 
-            modelBuilder.Entity<OrderDetails>()
+            modelBuilder.Entity<OrderDetail>()
                 .Property(o => o.Price)
                 .HasColumnType("decimal(18,4)");
 
-            modelBuilder.Entity<OrderDetails>()
+            modelBuilder.Entity<OrderDetail>()
                 .Property(o => o.Quantity)
                 .HasColumnType("decimal(18,4)");
         }

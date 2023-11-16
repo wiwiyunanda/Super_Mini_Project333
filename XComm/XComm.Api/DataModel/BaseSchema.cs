@@ -10,7 +10,7 @@ namespace XComm.Api.DataModel
         public DateTime CreatedDate { get; set; }
 
         [MaxLength(50)]
-        public string ModifiedBy { get; set; }
+        public string? ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
     }
 }
