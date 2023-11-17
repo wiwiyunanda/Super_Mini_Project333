@@ -99,6 +99,10 @@ namespace XComm.Api.Repositories
             }
             return result;
         }
-           
+
+        public ResponseResult Pagination(int pageNum, int rows, string search, string orderBy, Sorting sort)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -4,17 +4,18 @@ using XComm.Api.DataModel;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<XcommDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Db_Conn"));
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<XcommDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Db_Conn"));
-});
+//builder.Services.AddControllersWithViews();
+
 
 var app = builder.Build();
 

@@ -23,9 +23,9 @@ namespace XComm.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<List<CategoryViewModel>> Get()
+        public async Task<ResponseResult> Get(int pageNum, int rows, string? search = "", string? orderBy = "", Sorting sort = Sorting.Ascending)
         {
-            return _repo.GetAll();
+            return _repo.Pagination(pageNum, rows, search, orderBy, sort);
         }
 
         [HttpGet("{id}")]
