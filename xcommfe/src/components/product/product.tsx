@@ -1,18 +1,18 @@
 import React from 'react';
 
-import {ICategory} from '../../interfaces/iCategory';
+import {IProduct} from '../../interfaces/iProduct';
 
 interface IProps {
 }
 interface IState {
-    categories: ICategory[]
+    products: IProduct[]
 }
 
-export default class Category extends React.Component<IProps, IState> {
+export default class Product extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            categories: [
+            products: [
                 {id: 1, initial: 'a', name: 'name a', active: true},
                 {id: 2, initial: 'b', name: 'name b', active: false},
                 {id: 3, initial: 'c', name: 'name c', active: true}
@@ -21,10 +21,10 @@ export default class Category extends React.Component<IProps, IState> {
     }
 
     render() {
-        const { categories } = this.state;
+        const { products } = this.state;
         return (           
                 <div>
-                    <h4> Category </h4>
+                    <h4> Product </h4>
                     <table>
                         <thead>
                             <tr>
@@ -36,7 +36,7 @@ export default class Category extends React.Component<IProps, IState> {
                         </thead>
                         <tbody>
                             {
-                            categories.map((o: ICategory, idx: number) => {
+                            products.map((o: IProduct, idx: number) => {
                                 return(                                    
                                     <tr>
                                         <td>{idx + 1}</td>
