@@ -9,5 +9,8 @@ namespace XComm.Api.Repositories
         T Create(T model);
 
         ResponseResult Pagination(int pageNum, int rows, string search, string orderBy, Sorting sort);
+
+        ResponseResult Update (T model);
+        ResponseResult ChangeStatus(long id, bool status);
     }
 }

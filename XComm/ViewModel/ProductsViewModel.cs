@@ -9,7 +9,7 @@ namespace ViewModel
 {
     public class ProductsViewModel
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
         public long VariantId { get; set; }
         public VariantsViewModel? Variants { get; set; }
         [Required, MaxLength(10)]

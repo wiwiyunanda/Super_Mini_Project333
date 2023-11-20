@@ -33,5 +33,18 @@ namespace XComm.Api.Controllers
         {
             return _repo.GetById(id);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ResponseResult> Put(long id, CategoryViewModel model)
+        {
+            model.Id = id;
+            return _repo.Update(model);
+        }
+
+        [HttpPut("changestatus/{id}")]
+        public async Task<ResponseResult> Put(long id,bool status)
+        {
+            return _repo.ChangeStatus(id, status);
+        }
     }
 }

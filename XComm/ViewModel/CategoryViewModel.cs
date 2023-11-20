@@ -4,7 +4,7 @@ namespace ViewModel
 {
     public class CategoryViewModel
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
         [Required, MaxLength(10)]
         public string Initial { get; set; }
         [Required, MaxLength(50)]

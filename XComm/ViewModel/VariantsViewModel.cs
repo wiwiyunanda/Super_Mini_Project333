@@ -9,7 +9,7 @@ namespace ViewModel
 {
     public class VariantsViewModel
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
         public long CategoryId { get; set; }
         public CategoryViewModel? Category { get; set; } 
 

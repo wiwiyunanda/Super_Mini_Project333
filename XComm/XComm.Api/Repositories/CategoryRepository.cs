@@ -12,6 +12,41 @@ namespace XComm.Api.Repositories
         {
             _dbContext = dbContext;
         }
+
+
+        public ResponseResult ChangeStatus(long id, bool status)
+        {
+            try
+            {
+                Category entity = _dbContext.Categories
+                    .Where(o => o.Id == id)
+                    .FirstOrDefault();
+
+                if (entity != null)
+                {
+                    entity.Active = status;
+
+                    entity.ModifiedBy = "Ika";
+                    entity.ModifiedDate = DateTime.Now;
+
+                    _dbContext.SaveChanges();
+
+                    _result.Data = entity;
+                }
+                else
+                {
+                    _result.Success = false;
+                    _result.Message = "Category not found!";
+                }
+            }
+            catch (Exception e)
+            {
+                _result.Success = false;
+                _result.Message = e.Message;
+            }
+            return _result;
+        }
+
         public CategoryViewModel Create(CategoryViewModel model)
         {
             try
@@ -129,6 +164,41 @@ namespace XComm.Api.Repositories
             {
                 _result.Success = false;
                 _result.Message = ex.Message;
+            }
+            return _result;
+        }
+
+        public ResponseResult Update(CategoryViewModel model)
+        {
+            try
+            {
+                Category entity = _dbContext.Categories
+                    .Where(o => o.Id == model.Id)
+                    .FirstOrDefault();
+
+                if (entity != null)
+                {
+                    entity.Initial = model.Initial;
+                    entity.Name = model.Name;
+
+                    entity.ModifiedBy = "Ika";
+                    entity.ModifiedDate = DateTime.Now;
+
+                    _dbContext.SaveChanges();
+
+                    _result.Data = entity;
+                }
+                else
+                {
+                    _result.Success = false;
+                    _result.Message = "Category not found!";
+                    _result.Data = model;
+                }
+            }
+            catch (Exception e)
+            {
+                _result.Success = false;
+                _result.Message =e.Message;               
             }
             return _result;
         }
