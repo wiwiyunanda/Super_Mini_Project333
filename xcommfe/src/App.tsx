@@ -1,14 +1,15 @@
 import React from 'react';  
 import './App.css';
 import { BrowserRouter } from 'react-router-dom';
+import SideBar from './components/layout/sideBar';
 
-import {Header} from './components/layout';
+
 
 
 function App() {
   return (
     <BrowserRouter>
-      <Header/>
+      <SideBar/>
     </BrowserRouter>
   );
 }
