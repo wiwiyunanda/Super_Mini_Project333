@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {ICategory} from '../../interfaces/iCategory';
+import { CategoryService } from '../../services/categoryServices';
 
 interface IProps {
 }
@@ -12,11 +13,22 @@ export default class Category extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            categories: [
-                {id: 1, initial: 'a', name: 'name a', active: true},
-                {id: 2, initial: 'b', name: 'name b', active: false},
-                {id: 3, initial: 'c', name: 'name c', active: true}
-            ]
+            categories: []
+        }
+    }
+
+    componentDidMount(): void {
+        this.loadCategories();
+    }
+    loadCategories = async () => {
+        const result = await CategoryService.getAll();
+        if (result.success) {
+            this.setState({
+                categories: result.result,
+            })
+            console.log(result);
+        } else {
+            alert('Error: ' + result.result);
         }
     }
 
@@ -38,7 +50,7 @@ export default class Category extends React.Component<IProps, IState> {
                             {
                             categories.map((o: ICategory, idx: number) => {
                                 return(                                    
-                                    <tr>
+                                    <tr key={o.id}>
                                         <td>{idx + 1}</td>
                                         <td>{o.initial}</td>
                                         <td>{o.name}</td>

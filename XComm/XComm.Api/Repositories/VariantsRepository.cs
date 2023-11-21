@@ -156,6 +156,7 @@ namespace XComm.Api.Repositories
                     .Select(o => new VariantsViewModel()
                     {
                         Id = o.Id,
+                        CategoryId = o.CategoryId,
                         Initial = o.Initial,
                         Name = o.Name,
                         Active = o.Active

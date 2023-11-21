@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {IVariant} from '../../interfaces/iVariant';
+import { VariantService } from '../../services/variantServices';
 
 interface IProps {
 }
@@ -12,11 +13,22 @@ export default class Variant extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            variants: [
-                {id: 11, categoryId: 1, initial: 'a', name: 'name a', active: true},
-                {id: 21, categoryId: 2, initial: 'b', name: 'name b', active: false},
-                {id: 31, categoryId: 1, initial: 'c', name: 'name c', active: true}
-            ]
+            variants: []
+        }
+    }
+
+    componentDidMount(): void {
+        this.loadVariants();
+    }
+    loadVariants = async () => {
+        const result = await VariantService.getAll();
+        if (result.success) {
+            this.setState({
+                variants: result.result,
+            })
+            console.log(result);
+        } else {
+            alert('Error: ' + result.result);
         }
     }
 
@@ -39,7 +51,7 @@ export default class Variant extends React.Component<IProps, IState> {
                             {
                             variants.map((o: IVariant, idx: number) => {
                                 return(                                    
-                                    <tr>
+                                    <tr key={o.id}>
                                         <td>{idx + 1}</td>
                                         <td>{o.categoryId}</td>
                                         <td>{o.initial}</td>

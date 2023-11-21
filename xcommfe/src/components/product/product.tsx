@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {IProduct} from '../../interfaces/iProduct';
+import { ProductService } from '../../services/productServices';
 
 interface IProps {
 }
@@ -12,11 +13,22 @@ export default class Product extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            products: [
-                {id: 1, initial: 'a', name: 'name a', active: true},
-                {id: 2, initial: 'b', name: 'name b', active: false},
-                {id: 3, initial: 'c', name: 'name c', active: true}
-            ]
+            products: []
+        }
+    }
+
+    componentDidMount(): void {
+        this.loadProducts();
+    }
+    loadProducts = async () => {
+        const result = await ProductService.getAll();
+        if (result.success) {
+            this.setState({
+                products: result.result,
+            })
+            console.log(result);
+        } else {
+            alert('Error: ' + result.result);
         }
     }
 
@@ -29,19 +41,28 @@ export default class Product extends React.Component<IProps, IState> {
                         <thead>
                             <tr>
                                 <th>No.</th>
+                                <th>VariantId</th>
                                 <th>Initial</th>
                                 <th>Name</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th>Stock</th>
                                 <th>Active</th>
+
                             </tr>
                         </thead>
                         <tbody>
                             {
                             products.map((o: IProduct, idx: number) => {
                                 return(                                    
-                                    <tr>
+                                    <tr key={o.id}>
                                         <td>{idx + 1}</td>
+                                        <td>{o.variantId}</td>
                                         <td>{o.initial}</td>
                                         <td>{o.name}</td>
+                                        <td>{o.description}</td>
+                                        <td>{o.price}</td>
+                                        <td>{o.stock}</td>
                                         <td>{o.active? 'True' : 'False'}</td>
                                     </tr>
                                 )

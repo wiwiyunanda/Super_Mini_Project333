@@ -21,12 +21,12 @@ namespace XComm.Api.Controllers
         {
             return _repo.Create(model);
         }
-
         [HttpGet]
-        public async Task<List<VariantsViewModel>> Get()
+        public async Task<ResponseResult> Get(int pageNum, int rows, string? search = "", string? orderBy = "", Sorting sort = Sorting.Ascending)
         {
-            return _repo.GetAll();
+            return _repo.Pagination(pageNum, rows, search, orderBy, sort);
         }
+
 
         [HttpGet("{id}")]
         public async Task<VariantsViewModel> Get(long id)

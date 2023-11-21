@@ -164,8 +164,12 @@ namespace XComm.Api.Repositories
                     .Select(o => new ProductsViewModel()
                     {
                         Id = o.Id,
+                        VariantId = o.VariantId,
                         Initial = o.Initial,
                         Name = o.Name,
+                        Description = o.Description,
+                        Price = o.Price,
+                        Stock = o.Stock,
                         Active = o.Active
                     })
                     .ToList();
