@@ -39,7 +39,7 @@ export const CategoryService = {
     },
 
     post: (category : ICategory) => {
-        const result = axios.post(config.apiUrl + '/category', category)
+        const result = axios.post(config.apiUrl + '/category/', category)
         .then(respons => {
            // console.log(respons);
             return {
@@ -75,7 +75,7 @@ export const CategoryService = {
     },
 
     changeStatus: (id:number, status : boolean) => {
-        const result = axios.put(config.apiUrl + '/category/changestatus/' + id, status)
+        const result = axios.put(config.apiUrl + `/category/changestatus/${id}/${status}`)
         .then(respons => {
            console.log(respons);
             return {

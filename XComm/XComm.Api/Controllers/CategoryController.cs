@@ -41,7 +41,7 @@ namespace XComm.Api.Controllers
             return _repo.Update(model);
         }
 
-        [HttpPut("changestatus/{id}")]
+        [HttpPut("changestatus/{id}/{status}")]
         public async Task<CategoryViewModel> Put(long id,bool status)
         {
             return _repo.ChangeStatus(id, status);

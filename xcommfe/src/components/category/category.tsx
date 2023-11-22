@@ -222,6 +222,7 @@ export default class Category extends React.Component<IProps, IState> {
                     {
                         categories?.map((cat: ICategory) => {
                             return <tr key={cat.id} className="border-b dark:bg-gray-800 dark:border-gray-700">
+                                
                                     <td className="px-6 py-4">
                                         {cat.initial}
                                     </td>

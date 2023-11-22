@@ -4,9 +4,9 @@ import { IVariant } from '../interfaces/iVariant';
 
 export const VariantService = {
     getAll: () => {
-        const result = axios.get(config.apiUrl + '/Variants?pageNum=1&rows=10&orderBy=initial&sort=0')
-        // https://localhost:7016/api/Variants?pageNum=1&rows=5&orderBy=initial&sort=0
+        const result = axios.get(config.apiUrl + '/Variant?pageNum=1&rows=10&orderBy=initial&sort=0')
         .then(respons => {
+            console.log(respons);
             return {
                 success : respons.data.success,
                 result :respons.data.data
@@ -20,11 +20,30 @@ export const VariantService = {
         });
         return result;
     },
-    post: (variant : IVariant) => {
-        const result = axios.post(config.apiUrl + '/Variants', variant)
+
+    getById: (id: number) => {
+        const result = axios.get(config.apiUrl + '/Variant/' + id)
         .then(respons => {
             return {
-                success : respons.data.success,
+                success : respons.status == 200,
+                result :respons.data,
+            };
+        })
+        .catch((error) => {
+            return{
+                success : false,
+                result : error,
+            };
+        });
+        return result;
+    },
+
+    post: (variant : IVariant) => {
+        const result = axios.post(config.apiUrl + '/Variant/', variant)
+        .then(respons => {
+           // console.log(respons);
+            return {
+                success : (respons.status == 200),
                 result :respons.data.data
             }
         })
@@ -35,5 +54,41 @@ export const VariantService = {
             }
         });
         return result;
-    }
+    },
+
+    update: (id:number, variant : IVariant) => {
+        const result = axios.put(config.apiUrl + '/Variant/' + id, variant)
+        .then(respons => {
+           console.log(respons);
+            return {
+                success : (respons.status == 200),
+                result :respons.data
+            }
+        })
+        .catch(error => {
+            return{
+                success : false,
+                result : error
+            }
+        });
+        return result;
+    },
+
+    changeStatus: (id:number, status : boolean) => {
+        const result = axios.put(config.apiUrl + `/variant/changestatus/${id}/${status}`)
+        .then(respons => {
+           console.log(respons);
+            return {
+                success : (respons.status == 200),
+                result :respons.data
+            }
+        })
+        .catch(error => {
+            return{
+                success : false,
+                result : error
+            }
+        });
+        return result;
+    } 
 }
