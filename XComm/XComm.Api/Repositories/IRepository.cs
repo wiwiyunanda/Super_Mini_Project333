@@ -10,7 +10,7 @@ namespace XComm.Api.Repositories
 
         ResponseResult Pagination(int pageNum, int rows, string search, string orderBy, Sorting sort);
 
-        ResponseResult Update (T model);
-        ResponseResult ChangeStatus(long id, bool status);
+        T Update (T model);
+        T ChangeStatus(long id, bool status);
     }
 }

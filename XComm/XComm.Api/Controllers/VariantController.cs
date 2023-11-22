@@ -8,10 +8,10 @@ namespace XComm.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VariantsController : ControllerBase
+    public class VariantController : ControllerBase
     {
         private VariantsRepository _repo;// = new VariantsRepository();
-        public VariantsController(XcommDbContext dbContext)
+        public VariantController(XcommDbContext dbContext)
         {
             _repo = new VariantsRepository(dbContext);
         }
@@ -35,14 +35,14 @@ namespace XComm.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ResponseResult> Put(long id, VariantsViewModel model)
+        public async Task<VariantsViewModel> Put(long id, VariantsViewModel model)
         {
             model.Id = id;
             return _repo.Update(model);
         }
 
         [HttpPut("changestatus/{id}")]
-        public async Task<ResponseResult> Put(long id, bool status)
+        public async Task<VariantsViewModel> Put(long id, bool status)
         {
             return _repo.ChangeStatus(id, status);
         }

@@ -82,7 +82,7 @@ export default class Product extends React.Component<IProps, IState> {
                                     {cat.id}
                                 </td>
                                 <td className="px-6 py-4">
-                                    {cat.VariantId}
+                                    {cat.variantId}
                                 </td>
                                 <td className="px-6 py-4">
                                     {cat.initial}

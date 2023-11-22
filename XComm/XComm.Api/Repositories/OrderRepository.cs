@@ -12,7 +12,7 @@ namespace XComm.Api.Repositories
             _dbContext = dbContext;
         }
 
-        public ResponseResult ChangeStatus(long id, bool status)
+        public OrderHeaderViewModel ChangeStatus(long id, bool status)
         {
             throw new NotImplementedException();
         }
@@ -89,7 +89,7 @@ namespace XComm.Api.Repositories
             throw new NotImplementedException();
         }
 
-        public ResponseResult Update(OrderHeaderViewModel model)
+        public OrderHeaderViewModel Update(OrderHeaderViewModel model)
         {
             throw new NotImplementedException();
         }

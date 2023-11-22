@@ -14,8 +14,9 @@ namespace XComm.Api.Repositories
         }
 
 
-        public ResponseResult ChangeStatus(long id, bool status)
+        public VariantsViewModel ChangeStatus(long id, bool status)
         {
+            VariantsViewModel result = new VariantsViewModel();
             try
             {
                 Variants entity = _dbContext.Variants
@@ -31,20 +32,27 @@ namespace XComm.Api.Repositories
 
                     _dbContext.SaveChanges();
 
-                    _result.Data = entity;
+                    result = new VariantsViewModel()
+                    {
+                        Id = entity.Id,
+                        CategoryId = entity.CategoryId,
+                        Initial = entity.Initial,
+                        Name = entity.Name,
+                        Active = status
+                    };
                 }
-                else
-                {
-                    _result.Success = false;
-                    _result.Message = "Variant not found!";
-                }
+                //else
+                //{
+                //    _result.Success = false;
+                //    _result.Message = "Variant not found!";
+                //}
             }
             catch (Exception e)
             {
-                _result.Success = false;
-                _result.Message = e.Message;
+                //_result.Success = false;
+                //_result.Message = e.Message;
             }
-            return _result;
+            return result;
         }
         public VariantsViewModel Create(VariantsViewModel model)
         {
@@ -178,7 +186,7 @@ namespace XComm.Api.Repositories
             return _result;
         }
 
-        public ResponseResult Update(VariantsViewModel model)
+        public VariantsViewModel Update(VariantsViewModel model)
         {
             try
             {
@@ -195,22 +203,23 @@ namespace XComm.Api.Repositories
                     entity.ModifiedDate = DateTime.Now;
 
                     _dbContext.SaveChanges();
+                    model.Id = entity.Id;
 
-                    _result.Data = entity;
                 }
                 else
                 {
-                    _result.Success = false;
-                    _result.Message = "Variant not found!";
-                    _result.Data = model;
+                    model.Id = 0;
+                    //_result.Success = false;
+                    //_result.Message = "Variant not found!";
+                    //_result.Data = model;
                 }
             }
             catch (Exception e)
             {
-                _result.Success = false;
-                _result.Message = e.Message;
+                //_result.Success = false;
+                //_result.Message = e.Message;
             }
-            return _result;
+            return model;
         }
     }
 }

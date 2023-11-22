@@ -13,8 +13,9 @@ namespace XComm.Api.Repositories
         }
 
 
-        public ResponseResult ChangeStatus(long id, bool status)
+        public ProductsViewModel ChangeStatus(long id, bool status)
         {
+            ProductsViewModel result = new ProductsViewModel();
             try
             {
                 Products entity = _dbContext.Products
@@ -29,21 +30,30 @@ namespace XComm.Api.Repositories
                     entity.ModifiedDate = DateTime.Now;
 
                     _dbContext.SaveChanges();
-
-                    _result.Data = entity;
+                    result = new ProductsViewModel()
+                    {
+                        Id = entity.Id,
+                        VariantId = entity.VariantId,
+                        Initial = entity.Initial,
+                        Name = entity.Name,
+                        Description = entity.Description,
+                        Price = entity.Price,
+                        Stock = entity.Stock,
+                        Active = status
+                    };
                 }
                 else
                 {
-                    _result.Success = false;
-                    _result.Message = "Product not found!";
+                    //_result.Success = false;
+                    //_result.Message = "Product not found!";
                 }
             }
             catch (Exception e)
             {
-                _result.Success = false;
-                _result.Message = e.Message;
+                //_result.Success = false;
+                //_result.Message = e.Message;
             }
-            return _result;
+            return result;
         }
 
         public ProductsViewModel Create(ProductsViewModel model)
@@ -188,7 +198,7 @@ namespace XComm.Api.Repositories
             }
             return _result;
         }
-        public ResponseResult Update(ProductsViewModel model)
+        public ProductsViewModel Update(ProductsViewModel model)
         {
             try
             {
@@ -205,22 +215,24 @@ namespace XComm.Api.Repositories
                     entity.ModifiedDate = DateTime.Now;
 
                     _dbContext.SaveChanges();
-
-                    _result.Data = entity;
+                    model.Id = entity.Id;
                 }
                 else
                 {
-                    _result.Success = false;
-                    _result.Message = "Product not found!";
-                    _result.Data = model;
+                    model.Id = 0;
+                    //_result.Success = false;
+                    //_result.Message = "Product not found!";
+                    //_result.Data = model;
                 }
             }
             catch (Exception e)
             {
-                _result.Success = false;
-                _result.Message = e.Message;
+                //_result.Success = false;
+                //_result.Message = e.Message;
             }
-            return _result;
+            return model;
         }
+
+        
     }
 }

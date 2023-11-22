@@ -35,14 +35,14 @@ namespace XComm.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ResponseResult> Put(long id, CategoryViewModel model)
+        public async Task<CategoryViewModel> Put(long id, CategoryViewModel model)
         {
             model.Id = id;
             return _repo.Update(model);
         }
 
         [HttpPut("changestatus/{id}")]
-        public async Task<ResponseResult> Put(long id,bool status)
+        public async Task<CategoryViewModel> Put(long id,bool status)
         {
             return _repo.ChangeStatus(id, status);
         }
