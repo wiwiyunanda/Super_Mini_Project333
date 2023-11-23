@@ -1,5 +1,5 @@
 export enum ECommand {
     create = 'Create',
-    edit = 'Edit',
+    update = 'Update',
     changeStatus = 'Change Status'
 }

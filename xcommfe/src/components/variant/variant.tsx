@@ -7,6 +7,8 @@ import { CategoryService } from '../../services/categoryServices';
 import Form from './form';
 import { ECommand } from '../../enums/eCommand';
 import { ICategory } from '../../interfaces/iCategory';
+import { IPagination} from '../../interfaces/iPagination';
+import { config } from '../../configurations/config'
 
 interface IProps {
 }
@@ -17,23 +19,33 @@ interface IState {
     variant: IVariant;
     showModal: boolean;
     command: ECommand;
+    catpage : IPagination
 }
 
 export default class Variant extends React.Component<IProps, IState> {
+    newCategory: ICategory ={
+        id: 0, initial: '', name: '', active: false
+    }
+    newVariant: IVariant ={
+        id: 0, categoryId:0, initial: '', name: '', active: false, category: this.newCategory
+    }
+    newPagination : IPagination ={
+    pageNum: 1,
+        rows: config.rowsPerPage[0],
+        search: '',
+        orderBy: "id",
+        sort: 1,
+        pages: 0
+    }
     constructor(props: IProps) {
         super(props);
         this.state = {
             categories: [],
             variants: [],
-            variant: {
-                id: 0,
-                categoryId: 0,
-                initial: '',
-                name: '',
-                active: false
-            },
+            variant: this.newVariant,
             showModal: false,
-            command: ECommand.create
+            command: ECommand.create,
+            catpage:this.newPagination       
         }
     }
 
@@ -41,9 +53,10 @@ export default class Variant extends React.Component<IProps, IState> {
         this.loadVariants();
     }
     loadVariants = async () => {
+        const { catpage } = this.state;
         const result = await VariantService.getAll();
         if (result.success) {
-            const catResult = await CategoryService.getAll();
+            const catResult = await CategoryService.getAll(catpage);
             if (catResult.success) {
                 this.setState({
                     categories: catResult.result
@@ -52,9 +65,8 @@ export default class Variant extends React.Component<IProps, IState> {
             this.setState({
                 variants: result.result
             });
-        } else {
-            alert('Error: ' + result.result);
-        }
+        } console.log(result);
+        
     }
 
     setShowModal = (val: boolean) => {
@@ -82,10 +94,10 @@ export default class Variant extends React.Component<IProps, IState> {
         })
     }
 
-    createCommand = (command: string) =>{
+    createCommand = () =>{
         this.setState ({
             showModal: true,
-            variant: {id : 0, categoryId: 0, initial: '',  name: '', active:false},
+            variant: this.newVariant,
             command: ECommand.create,
             
         })
@@ -98,7 +110,7 @@ export default class Variant extends React.Component<IProps, IState> {
                     this.setState({
                         showModal: true,
                         variant: result.result,
-                        command: ECommand.edit                               
+                        command: ECommand.update,                               
                     });
                     this.loadVariants();
                 } else{
@@ -118,7 +130,8 @@ export default class Variant extends React.Component<IProps, IState> {
                         showModal: true,
                         variant: result.result,
                         command: ECommand.changeStatus
-                    })
+                    });
+                    this.loadVariants();
                 } else {
                     alert('Error result ' + result.result);
                 }
@@ -127,6 +140,20 @@ export default class Variant extends React.Component<IProps, IState> {
                 alert('Error error' + error);
             })
     };
+
+    changeRowsPerPage = (name: any) => (event: any) => {
+        this.setState({
+          catpage: {
+            ...this.state.catpage,
+            [name]: event.target.value,
+          },
+        });
+        new Promise(() => {
+          setTimeout(() => {
+            this.loadVariants();
+          }, 500);
+        });
+    };    
 
     submitHandler = async () => {
         const { variant } = this.state;
@@ -137,14 +164,7 @@ export default class Variant extends React.Component<IProps, IState> {
                 if (result.success){
                     this.setState({
                         showModal: false,
-                        variant: {
-                            id: 0,
-                            categoryId : 0,
-                            initial: '',
-                            name: '',
-                            active: true
-                        }
-        
+                        variant: this.newVariant      
                     })
                     this.loadVariants();
                 } else{
@@ -154,20 +174,14 @@ export default class Variant extends React.Component<IProps, IState> {
             .catch(error => {
                 alert('Error error' + error);
             })
-        } else if (command == ECommand.edit) {
+        } else if (command == ECommand.update) {
             
             await VariantService.update(variant.id, variant)
             .then(result => {
                 if (result.success){
                     this.setState({
                         showModal: false,
-                        variant: {
-                            id: 0,
-                            categoryId : 0,
-                            initial: '',
-                            name: '',
-                            active: true
-                        }        
+                        variant: this.newVariant
                     })
                     this.loadVariants();
                 } else{
@@ -175,7 +189,7 @@ export default class Variant extends React.Component<IProps, IState> {
                 }
             })
             .catch(error => {
-                alert('Error error' + error);
+                alert('Error result' + error);
             })
 
         } else if (command == ECommand.changeStatus) {
@@ -184,13 +198,7 @@ export default class Variant extends React.Component<IProps, IState> {
                 if (result.success) {
                     this.setState({
                         showModal: false,
-                        variant: {
-                            id: 0,
-                            categoryId: 0,
-                            initial: '',
-                            name: '',
-                            active: true
-                        }
+                        variant:this.newVariant
                     })
                     this.loadVariants();
                 } else {
@@ -211,7 +219,7 @@ export default class Variant extends React.Component<IProps, IState> {
             <span>{JSON.stringify(variant)}</span>
             <div className="flex" aria-label="Button">
                 <button className="my-8 justify-start h-8 px-4 text-green-100 transition-colors duration-150 
-                 bg-green-700 rounded focus:shadow-outline hover:bg-green-800" onClick={() => this.createCommand('create')}>Create New </button>
+                 bg-green-700 rounded focus:shadow-outline hover:bg-green-800" onClick={() => this.createCommand()}>Create New </button>
             </div>          
             <table className="w-full text-sm text-left text-gray-50">
                 <thead className="text-xs text-gray-300 uppercase bg-gray-50">
@@ -236,10 +244,9 @@ export default class Variant extends React.Component<IProps, IState> {
                 <tbody>
                     {
                         variants?.map((cat: IVariant) => {
-                            return <tr key={cat.id} className="border-b bg-gray-800 border-gray-700">
-                                
-                                <td className="px-6 py-4">
-                                    {cat.categoryId}
+                            return <tr key={cat.id} className="border-b bg-gray-800 border-gray-700">                               
+                                <td scope = "row" className="px-6 py-4">
+                                    {cat.category.initial}
                                 </td>
                                 <td className="px-6 py-4">
                                     {cat.initial}
@@ -262,7 +269,27 @@ export default class Variant extends React.Component<IProps, IState> {
                         })
                     }
                 </tbody>
-            </table>
+                <tfoot className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr className="border-b dark:bg-gray-900 dark:border-gray-700">
+              <th colSpan={4} scope="col" className="px-6 py-3 w-14 h-14">
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Rows per page:
+                </label>
+              </th>
+              <th scope="col" className="px-6 py-3 w-14 h-14">
+                <select
+                  id="countries"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  onClick={this.changeRowsPerPage("rows")}
+                >
+                  {config.rowsPerPage.map((cat: number) => {
+                    return <option value={cat}>{cat}</option>;
+                  })}
+                </select>
+              </th>
+            </tr>
+          </tfoot>
+        </table>
             {
                 showModal ? (
                     <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none ">

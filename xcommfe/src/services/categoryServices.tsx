@@ -1,21 +1,25 @@
 import axios from 'axios';
 import { config } from '../configurations/config';
 import { ICategory } from '../interfaces/iCategory';
+import { IPagination } from '../interfaces/iPagination';
 
 export const CategoryService = {
-    getAll: () => {
-        const result = axios.get(config.apiUrl + '/category?pageNum=1&rows=15&orderBy=initial&sort=0')
+    getAll: (pg: IPagination) => {
+        const searchStr = pg.search.length > 0 ? `&search=${pg.search}`: ``;
+        const result = axios.get(config.apiUrl + `/category?pageNum=${pg.pageNum}&rows=${pg.rows}${searchStr}&orderBy=${pg.orderBy}&sort=${pg.sort}`)
         .then(respons => {
             console.log(respons);
             return {
                 success : respons.data.success,
-                result :respons.data.data
+                result :respons.data.data,
+                pages: respons.data.pages
             }
         })
         .catch(error => {
             return{
                 success : false,
-                result : error
+                result : error,
+                pages: 0
             }
         });
         return result;

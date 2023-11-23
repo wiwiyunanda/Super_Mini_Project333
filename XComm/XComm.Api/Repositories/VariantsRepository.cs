@@ -61,7 +61,7 @@ namespace XComm.Api.Repositories
                 Variants entity = new Variants();
                 entity.CategoryId = model.CategoryId;
                 entity.Initial = model.Initial;
-                entity.Name = model.Name;
+                entity.Name = model.Name; 
                 entity.Active = model.Active;
 
                 entity.CreatedBy = "Ika";
@@ -87,8 +87,15 @@ namespace XComm.Api.Repositories
                 result = (from o in _dbContext.Variants
                           select new VariantsViewModel
                           {
-                              CategoryId = o.CategoryId,
                               Id = o.Id,
+                              CategoryId = o.CategoryId,                            
+                              Category = new CategoryViewModel()
+                              {
+                                  Id = o.Category.Id,
+                                  Initial = o.Category.Initial,
+                                  Name = o.Category.Name,
+                                  Active = o.Category.Active
+                              },
                               Initial = o.Initial,
                               Name = o.Name,
                               Active = o.Active
@@ -165,6 +172,13 @@ namespace XComm.Api.Repositories
                     {
                         Id = o.Id,
                         CategoryId = o.CategoryId,
+                        Category = new CategoryViewModel()
+                        {
+                            Id = o.Category.Id,
+                            Initial = o.Category.Initial,
+                            Name = o.Category.Name,
+                            Active = o.Category.Active
+                        },
                         Initial = o.Initial,
                         Name = o.Name,
                         Active = o.Active

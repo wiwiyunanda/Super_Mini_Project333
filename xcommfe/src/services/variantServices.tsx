@@ -39,12 +39,14 @@ export const VariantService = {
     },
 
     post: (variant : IVariant) => {
-        const result = axios.post(config.apiUrl + '/Variant/', variant)
+        const {category, ...newVariant } =variant;
+        console.log(variant, newVariant);
+        const result = axios.post(config.apiUrl + '/Variant/', newVariant)
         .then(respons => {
-           // console.log(respons);
+           console.log(respons);
             return {
                 success : (respons.status == 200),
-                result :respons.data.data
+                result :respons.data
             }
         })
         .catch(error => {
@@ -59,7 +61,7 @@ export const VariantService = {
     update: (id:number, variant : IVariant) => {
         const result = axios.put(config.apiUrl + '/Variant/' + id, variant)
         .then(respons => {
-           console.log(respons);
+          // console.log(respons);
             return {
                 success : (respons.status == 200),
                 result :respons.data
@@ -77,7 +79,7 @@ export const VariantService = {
     changeStatus: (id:number, status : boolean) => {
         const result = axios.put(config.apiUrl + `/variant/changestatus/${id}/${status}`)
         .then(respons => {
-           console.log(respons);
+          // console.log(respons);
             return {
                 success : (respons.status == 200),
                 result :respons.data

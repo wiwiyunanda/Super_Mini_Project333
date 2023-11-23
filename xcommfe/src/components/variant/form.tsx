@@ -3,6 +3,7 @@ import React from 'react';
 import { IVariant } from '../../interfaces/iVariant';
 import { ECommand } from '../../enums/eCommand';
 import { ICategory } from '../../interfaces/iCategory';
+import variant from "./variant";
 
 interface IProps {
     variant: IVariant;
@@ -14,20 +15,34 @@ interface IProps {
 interface IState {
 }
 
-export default class Form extends React.Component<IProps, IState> {
+export default class Variant extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
+        this.state = this.props;
     }
 
     render() {
-        const { variant, command, changeHandler, checkBoxHandler } = this.props;
+        const { categories, variant, command, changeHandler, checkBoxHandler } = this.props;
         return (           
             <>
                 <form>
                 <div className="mb-6">
-                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">CategoryId</label>
-                        <input readOnly={command == ECommand.changeStatus} type="text" id="categoryId" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value={variant.categoryId} onChange={changeHandler('categoryId')}/>
-                    </div>
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Select Category
+                </label>
+                <select
+                    id="countries"
+                    value={variant.categoryId}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    onChange={changeHandler("categoryId")}>
+                {/* <option selected value = "0">Choose a Category</option> */}
+                        {
+                            categories.map((o: ICategory) => {
+                            return <option value={o.id}>{o.name}</option>;
+                            })
+                        }
+                </select>
+                </div>
                 <div className="mb-6">
                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Initial</label>
                         <input readOnly={command == ECommand.changeStatus} type="text" id="initial" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value={variant.initial} onChange={changeHandler('initial')}/>
