@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace XComm.Api.DataModel
 {
@@ -16,6 +17,7 @@ namespace XComm.Api.DataModel
         public DbSet<FileCollections> FileCollection { get; set; }
         public DbSet<Account> Account { get; set; }
         public DbSet<UserRoles> UserRole { get; set; }
+        public DbSet<Gallery> Galleries { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -89,6 +91,14 @@ namespace XComm.Api.DataModel
             modelBuilder.Entity<OrderDetail>()
                 .Property(o => o.Quantity)
                 .HasColumnType("decimal(18,4)");
+
+            modelBuilder.Entity<Gallery>()
+                .Property(o => o.Base64Big)
+                .HasColumnType("nvarchar(max)");
+
+            modelBuilder.Entity<Gallery>()
+                .Property(o => o.Base64Small)
+                .HasColumnType("nvarchar(max)");
         }
     }
 }

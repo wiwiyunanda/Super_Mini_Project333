@@ -15,7 +15,7 @@ interface IProps {
 interface IState {
 }
 
-export default class Variant extends React.Component<IProps, IState> {
+export default class Form extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = this.props;
