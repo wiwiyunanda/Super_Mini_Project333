@@ -6,6 +6,7 @@ namespace XComm.Api.Repositories
     {
         List<T> GetAll();  //get all hanya untuk pemula, jangan dibikin di production
         T GetById(long id);
+        List<T> GetByParentId(long parentId);
         T Create(T model);
 
         ResponseResult Pagination(int pageNum, int rows, string search, string orderBy, Sorting sort);

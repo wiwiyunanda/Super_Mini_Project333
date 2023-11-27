@@ -94,6 +94,21 @@ namespace XComm.Api.Repositories
                           {
 
                               Id = o.Id,
+                              VariantId = o.VariantId,
+                              Variant = new VariantsViewModel()
+                              {
+                                  Id= o.Variant.Id,
+                                  Initial = o.Variant.Initial,
+                                  Name = o.Variant.Name,
+                                  Active = o.Variant.Active,
+                                  Category= new CategoryViewModel()
+                                  {
+                                      Id= o.Variant.Category.Id,
+                                      Initial= o.Variant.Category.Initial,
+                                      Name= o.Variant.Category.Name,
+                                      Active= o.Variant.Category.Active,
+                                  },
+                              },
                               Initial = o.Initial,
                               Name = o.Name,
                               Description = o.Description,
@@ -119,7 +134,7 @@ namespace XComm.Api.Repositories
                           select new ProductsViewModel
                           {
                               VariantId = o.VariantId,
-                              Variants = new VariantsViewModel()
+                              Variant = new VariantsViewModel()
                               {
                                   Id = o.Id,
                                   Initial = o.Initial,
@@ -144,6 +159,11 @@ namespace XComm.Api.Repositories
                 throw;
             }
             return result;
+        }
+
+        public List<ProductsViewModel> GetByParentId(long parentId)
+        {
+            throw new NotImplementedException();
         }
 
         public ResponseResult Pagination(int pageNum, int rows, string search, string orderBy, Sorting sort)
@@ -173,8 +193,22 @@ namespace XComm.Api.Repositories
                     .Take(rows)
                     .Select(o => new ProductsViewModel()
                     {
-                        Id = o.Id,
                         VariantId = o.VariantId,
+                        Variant = new VariantsViewModel()
+                        {
+                            Id = o.Variant.Id,
+                            Initial = o.Variant.Initial,
+                            Name = o.Variant.Name,
+                            Active = o.Variant.Active,
+                            Category = new CategoryViewModel
+                            {
+                                Id = o.Variant.Category.Id,
+                                Initial = o.Variant.Category.Initial,
+                                Name = o.Variant.Category.Name,
+                                Active = o.Variant.Category.Active,
+                            }
+                        },
+                        Id = o.Id,
                         Initial = o.Initial,
                         Name = o.Name,
                         Description = o.Description,

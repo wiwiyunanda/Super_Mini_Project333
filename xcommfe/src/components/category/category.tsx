@@ -103,7 +103,7 @@ export default class Category extends React.Component<IProps, IState> {
           this.setState({
             showModal: true,
             category: result.result,
-            command: ECommand.update,
+            command: ECommand.edit,
           });
           this.loadCategories();
         } else {
@@ -194,7 +194,7 @@ export default class Category extends React.Component<IProps, IState> {
         .catch((error) => {
           alert("Error error" + error);
         });
-    } else if (command == ECommand.update) {
+    } else if (command == ECommand.edit) {
       await CategoryService.update(category.id, category)
         .then((result) => {
           if (result.success) {

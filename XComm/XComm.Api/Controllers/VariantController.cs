@@ -34,6 +34,12 @@ namespace XComm.Api.Controllers
             return _repo.GetById(id);
         }
 
+        [HttpGet("category/{id}")]
+        public async Task<List<VariantsViewModel>> GetByParent(long id)
+        {
+            return _repo.GetByParentId(id);
+        }
+
         [HttpPut("{id}")]
         public async Task<VariantsViewModel> Put(long id, VariantsViewModel model)
         {

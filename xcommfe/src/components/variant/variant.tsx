@@ -110,7 +110,7 @@ export default class Variant extends React.Component<IProps, IState> {
                     this.setState({
                         showModal: true,
                         variant: result.result,
-                        command: ECommand.update,                               
+                        command: ECommand.edit,                               
                     });
                     this.loadVariants();
                 } else{
@@ -174,7 +174,7 @@ export default class Variant extends React.Component<IProps, IState> {
             .catch(error => {
                 alert('Error error' + error);
             })
-        } else if (command == ECommand.update) {
+        } else if (command == ECommand.edit) {
             
             await VariantService.update(variant.id, variant)
             .then(result => {

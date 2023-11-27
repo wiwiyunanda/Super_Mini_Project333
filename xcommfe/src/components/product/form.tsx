@@ -1,11 +1,13 @@
 import React from 'react';
 
-import { IProduct } from '../../interfaces/iProduct';
 import { ECommand } from '../../enums/eCommand';
+import { ICategory } from '../../interfaces/iCategory';
 import { IVariant } from '../../interfaces/iVariant';
+import { IProduct } from '../../interfaces/iProduct';
 
 interface IProps {
     product: IProduct;
+    categories: ICategory[];
     variants: IVariant[];
     command: ECommand;
     changeHandler: any;
@@ -20,18 +22,18 @@ export default class Form extends React.Component<IProps, IState> {
     }
 
     render() {
-        const { variants, product, command, changeHandler, checkBoxHandler } = this.props;
+        const { categories, variants, product, command, changeHandler, checkBoxHandler } = this.props;
         return (           
             <>
                 <form>
                 <div className="mb-6">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Select Variant
+                    Category
                 </label>
                 <select
                     id="countries"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    onChange={changeHandler("variantId")}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value={product.variant.categoryId}
+                    onChange={changeHandler("categoryId")}
                 >
                 <option selected>Choose a variant</option>
                 {variants.map((o: IVariant) => {
@@ -48,16 +50,16 @@ export default class Form extends React.Component<IProps, IState> {
                         <input readOnly={command == ECommand.changeStatus} type="text" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value={product.name} onChange={changeHandler('name')}/>
                     </div>
                     <div className="mb-6">
-                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
                         <input readOnly={command == ECommand.changeStatus} type="text" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value={product.description} onChange={changeHandler('description')}/>
                     </div>
                     <div className="mb-6">
-                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                        <input readOnly={command == ECommand.changeStatus} type="text" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value={product.price} onChange={changeHandler('price')}/>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
+                        <input readOnly={command == ECommand.changeStatus} type="number" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value={product.price} onChange={changeHandler('price')}/>
                     </div>
                     <div className="mb-6">
-                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                        <input readOnly={command == ECommand.changeStatus} type="text" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value={product.stock} onChange={changeHandler('stock')}/>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Stock</label>
+                        <input readOnly={command == ECommand.changeStatus} type="number" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value={product.stock} onChange={changeHandler('stock')}/>
                     </div>
                     {
                         command == ECommand.changeStatus ?

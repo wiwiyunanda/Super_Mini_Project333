@@ -84,6 +84,11 @@ namespace XComm.Api.Repositories
             throw new NotSupportedException();
         }
 
+        public List<OrderHeaderViewModel> GetByParentId(long parentId)
+        {
+            throw new NotImplementedException();
+        }
+
         public ResponseResult Pagination(int pageNum, int rows, string search, string orderBy, Sorting sort)
         {
             throw new NotImplementedException();

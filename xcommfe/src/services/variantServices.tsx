@@ -38,6 +38,23 @@ export const VariantService = {
         return result;
     },
 
+    getByParentId: (id: number) => {
+        const result = axios.get(config.apiUrl + '/Variant/category/' + id)
+        .then(respons => {
+            return {
+                success : respons.status == 200,
+                result :respons.data,
+            };
+        })
+        .catch((error) => {
+            return{
+                success : false,
+                result : error,
+            };
+        });
+        return result;
+    },
+
     post: (variant : IVariant) => {
         const {category, ...newVariant } =variant;
         console.log(variant, newVariant);

@@ -68,6 +68,11 @@ namespace XComm.Api.Repositories
             throw new NotImplementedException();
         }
 
+        public List<GalleryViewModel> GetByParentId(long parentId)
+        {
+            throw new NotImplementedException();
+        }
+
         public ResponseResult Pagination(int pageNum, int rows, string search, string orderBy, Sorting sort)
         {
             List<GalleryViewModel> result = new List<GalleryViewModel>();

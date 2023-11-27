@@ -1,10 +1,10 @@
-export interface IProduct {
-    id: number;
+import { ICategory } from "./iCategory";
+import { IVariant } from "./iVariant";
+
+export interface IProduct extends ICategory{
     variantId: number;
-    initial: string;
-    name: string;
+    variant: IVariant;
     description: string;
     price: number;
     stock: number;
-    active: boolean;
-  }
+}

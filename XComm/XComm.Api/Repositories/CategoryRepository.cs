@@ -1,6 +1,6 @@
 ﻿using ViewModel;
 using XComm.Api.DataModel;
-
+ 
 namespace XComm.Api.Repositories
 {
     public class CategoryRepository : IRepository<CategoryViewModel>
@@ -123,6 +123,11 @@ namespace XComm.Api.Repositories
                     throw;
                 }
                 return result;           
+        }
+
+        public List<CategoryViewModel> GetByParentId(long parentId)
+        {
+            throw new NotImplementedException();
         }
 
         public ResponseResult Pagination(int pageNum, int rows, string search, string orderBy, Sorting sort)

@@ -98,23 +98,50 @@ export default class Gallery extends React.Component<IProps, IState> {
       gallery: this.newGallery,
       command: ECommand.create,
     });
+    // this.setShowModal(true);
   };
 
-  submitHandler = async () => {};
-
   photoUpload = (event: any) => {
-    const reader = new FileReader();
     const file = event.target.files[0];
-    if (reader !== undefined && file !== undefined) {
-      reader.onload = () => {
-        this.setState({
-          gallery: {
-            ...this.state.gallery,
-            base64Big: reader.result,
-            base64Small: reader.result,
-          },
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      this.setState({
+        gallery: {
+          ...this.state.gallery,
+          base64Big: reader.result,
+          base64Small: reader.result,
+        },
+      });
+    };
+
+    reader.onerror = (error) => {
+      console.log("Error: ", error);
+    };
+  };
+
+  submitHandler = async () => {
+    const { command, gallery } = this.state;
+    if (command == ECommand.create) {
+      await GalleryService.post(this.state.gallery)
+        .then((result) => {
+          if (result.success) {
+            this.setState({
+              showModal: false,
+              gallery: this.newGallery,
+            });
+            this.loadGalleries();
+          } else {
+            alert("Error result " + result.result);
+          }
+        })
+        .catch((error) => {
+          alert("Error error" + error);
         });
-      };
+    } else if (command == ECommand.edit) {
+    } else if (command == ECommand.changeStatus) {
     }
   };
 
@@ -123,12 +150,12 @@ export default class Gallery extends React.Component<IProps, IState> {
 
     return (
       <div>
-        <div className="text-left text-3xl pt-5">Gallerries</div>
-        <span>{JSON.stringify(pagination)}</span>
+        <div className="text-left text-3xl pt-5">Categories</div>
+        <span>{JSON.stringify(gallery)}</span>
         <div className="flex" aria-label="Button">
           <button
             className="my-8 justify-start h-8 px-4 text-green-100 transition-colors duration-150 bg-green-700 rounded focus:shadow-outline hover:bg-green-800"
-            onClick={() => this.createCommand()}
+            onClick={this.createCommand}
           >
             Create New
           </button>
@@ -142,7 +169,7 @@ export default class Gallery extends React.Component<IProps, IState> {
                   className="border-b dark:bg-gray-800 dark:border-gray-700"
                 >
                   <td className="px-6 py-4">
-                    <img className="h-36" src={o.base64Big}></img>
+                    <img height={128} width={128} src={o.base64Big}></img>
                   </td>
                   <td className="px-6 py-4">{o.title}</td>
                   <td className="px-6 py-4">
@@ -195,6 +222,7 @@ export default class Gallery extends React.Component<IProps, IState> {
                   <Form
                     gallery={gallery}
                     command={command}
+                    photoUpload={this.photoUpload}
                     changeHandler={this.changeHandler}
                     checkBoxHandler={this.checkBoxHandler}
                   />

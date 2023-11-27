@@ -11,7 +11,7 @@ namespace ViewModel
     {
         public long? Id { get; set; }
         public long VariantId { get; set; }
-        public VariantsViewModel? Variants { get; set; }
+        public VariantsViewModel? Variant { get; set; }
         [Required, MaxLength(10)]
         public string Initial { get; set; }
         [Required, MaxLength(50)]

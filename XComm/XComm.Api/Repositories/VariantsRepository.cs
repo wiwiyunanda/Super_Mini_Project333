@@ -143,6 +143,36 @@ namespace XComm.Api.Repositories
 
         }
 
+        public List<VariantsViewModel> GetByParentId(long parentId)
+        {
+            List<VariantsViewModel> result = new List<VariantsViewModel>();
+            try
+            {
+                result = (from o in _dbContext.Variants
+                          where o.CategoryId == parentId
+                          select new VariantsViewModel
+                          {
+                              Id = o.Id,
+                              CategoryId = o.CategoryId,
+                              Category = new CategoryViewModel()
+                              {
+                                  Id = o.Category.Id,
+                                  Initial = o.Category.Initial,
+                                  Name = o.Category.Name,
+                                  Active = o.Category.Active
+                              },
+                              Initial = o.Initial,
+                              Name = o.Name,
+                              Active = o.Active
+                          }).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return result;
+        }
+
         public ResponseResult Pagination(int pageNum, int rows, string search, string orderBy, Sorting sort)
         {
             try
