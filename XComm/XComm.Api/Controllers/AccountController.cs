@@ -38,9 +38,10 @@ namespace XComm.Api.Controllers
                         new Claim("FistName", result.FirstName),
                         new Claim("LastName", result.LastName)
                     };
-                    claims.Add(new Claim(ClaimTypes.Role, "Category"));
-                    claims.Add(new Claim(ClaimTypes.Role, "Variant"));
-                    claims.Add(new Claim(ClaimTypes.Role, "Product"));
+                    foreach (var role in result.Roles)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role));
+                    }
 
                     var token = GetToken(claims);
                     result.Token = new JwtSecurityTokenHandler().WriteToken(token);

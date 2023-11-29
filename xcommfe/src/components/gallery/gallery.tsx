@@ -150,7 +150,7 @@ export default class Gallery extends React.Component<IProps, IState> {
 
     return (
       <div>
-        <div className="text-left text-3xl pt-5">Categories</div>
+        <div className="text-left text-3xl pt-5">Galleries</div>
         <span>{JSON.stringify(gallery)}</span>
         <div className="flex" aria-label="Button">
           <button

@@ -15,17 +15,23 @@ namespace XComm.Api.Repositories
         public AccountViewModel Authentication(LoginViewModel model)
         {
             AccountViewModel result = new AccountViewModel();
-            result = _dbContext.Account
-                .Where(o => o.UserName == model.UserName && o.Password == Encryption.HashSha256(model.Password))
-                .Select(o => new AccountViewModel
+            Account account = _dbContext.Account
+                .Where(o => o.UserName == model.UserName && o.Password == Encryption.HashSha256(model.Password)).FirstOrDefault();
+
+            if (account != null)
+            {
+                result = new AccountViewModel()
                 {
-                    Id = o.Id,
-                    UserName = o.UserName,
-                    FirstName = o.FirstName,
-                    LastName = o.LastName,
-                    Email = o.Email,
-                    Active = o.Active
-                }).FirstOrDefault();               
+                    Id = account.Id,
+                    UserName = account.UserName,
+                    FirstName = account.FirstName,
+                    LastName = account.LastName,
+                    Email = account.Email,
+                    Active = account.Active
+                };
+
+                result.Roles = Roles(account.RoleGroupId);
+            }
             return result;
         }
 
@@ -56,12 +62,26 @@ namespace XComm.Api.Repositories
                               FirstName = o.FirstName,
                               LastName = o.LastName,
                               Email = o.Email,
+                              Roles = Roles(o.RoleGroupId),
                               Active = o.Active
                           }).FirstOrDefault();
             }
             catch (Exception)
             {
                 throw;
+            }
+            return result;
+        }
+
+        private List<string> Roles(long roleGroupId)
+        {
+            List<string> result = new List<string>();
+            var list= _dbContext.AuthorizationGroups
+                .Where(o => o.RoleGroupId == roleGroupId)
+                .ToList();
+            foreach (var group in list)
+            {
+                result.Add(group.Role);
             }
             return result;
         }

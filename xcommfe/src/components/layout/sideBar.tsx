@@ -6,6 +6,9 @@ import { Category } from "../category";
 import { Variant } from "../variant";
 import { Product } from "../product";
 import { Gallery } from "../gallery";
+import { Authentication } from "../auth";
+// import { ProtectedRoute } from "./protectedRoute";
+
 export default class SideBar extends React.Component {
   render() {
     return (
@@ -65,6 +68,16 @@ export default class SideBar extends React.Component {
                     <span className="text-gray-100">
                       <Link to="/galleries">Galleries</Link>
                     </span>
+                    </a>
+                </li>
+                <li className="rounded-sm">
+                  <a
+                    href="#"
+                    className="flex items-center p-2 space-x-3 rounded-md"
+                  >
+                    <span className="text-gray-100">
+                      <Link to="/auth">Login</Link>
+                    </span>
                   </a>
                 </li>
               </ul>
@@ -78,9 +91,10 @@ export default class SideBar extends React.Component {
             <Route path="/variants" Component={Variant} />
             <Route path="/products" Component={Product} />
             <Route path="/galleries" Component={Gallery} />
+            <Route path="/auth" Component={Authentication} />
           </Routes>
         </div>
       </div>
-    );
+    )
   }
 }
