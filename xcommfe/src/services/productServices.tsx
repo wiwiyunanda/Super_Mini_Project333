@@ -4,8 +4,7 @@ import { IProduct } from '../interfaces/iProduct';
 
 export const ProductService = {
     getAll: () => {
-        const result = axios.get(config.apiUrl + '/Products?pageNum=1&rows=10&orderBy=initial&sort=0')
-        // https://localhost:7016/api/Products?pageNum=1&rows=5&orderBy=initial&sort=0
+        const result = axios.get(config.apiUrl + '/Products?pageNum=1&rows=100&orderBy=initial&sort=0')
         .then(respons => {
             console.log(respons);
             return {

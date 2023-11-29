@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XComm.Api.DataModel;
 
@@ -11,9 +12,11 @@ using XComm.Api.DataModel;
 namespace XComm.Api.Migrations
 {
     [DbContext(typeof(XcommDbContext))]
-    partial class XcommDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231128074531_addAccount")]
+    partial class addAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,9 +34,6 @@ namespace XComm.Api.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Attempt")
-                        .HasColumnType("int");
-
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -41,13 +41,6 @@ namespace XComm.Api.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasDefaultValue("winkawinoy@gmail.com");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -72,22 +65,12 @@ namespace XComm.Api.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Otp")
-                        .HasColumnType("char(6)");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<long>("RoleGroupId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasDefaultValue(1L);
-
                     b.HasKey("UserName");
-
-                    b.HasIndex("RoleGroupId");
 
                     b.HasIndex("UserName")
                         .IsUnique();
@@ -99,117 +82,23 @@ namespace XComm.Api.Migrations
                         {
                             UserName = "admin",
                             Active = true,
-                            Attempt = 0,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 11, 29, 9, 29, 7, 817, DateTimeKind.Local).AddTicks(8835),
-                            Email = "winkawinoy@gmail.com",
+                            CreatedDate = new DateTime(2023, 11, 28, 14, 45, 31, 472, DateTimeKind.Local).AddTicks(3521),
                             FirstName = "Super",
                             Id = 1L,
                             LastName = "Admin",
-                            Password = "ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596cad4c6e270",
-                            RoleGroupId = 0L
+                            Password = "ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596cad4c6e270"
                         },
                         new
                         {
                             UserName = "user1",
                             Active = true,
-                            Attempt = 0,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 11, 29, 9, 29, 7, 817, DateTimeKind.Local).AddTicks(8851),
-                            Email = "winkawinoy@gmail.com",
+                            CreatedDate = new DateTime(2023, 11, 28, 14, 45, 31, 472, DateTimeKind.Local).AddTicks(3543),
                             FirstName = "User",
                             Id = 2L,
                             LastName = "One",
-                            Password = "0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90",
-                            RoleGroupId = 0L
-                        });
-                });
-
-            modelBuilder.Entity("XComm.Api.DataModel.AuthorizationGroup", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<long>("RoleGroupId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleGroupId");
-
-                    b.ToTable("AuthorizationGroups");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 11, 29, 9, 29, 7, 817, DateTimeKind.Local).AddTicks(8997),
-                            Role = "Products",
-                            RoleGroupId = 1L
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 11, 29, 9, 29, 7, 817, DateTimeKind.Local).AddTicks(8999),
-                            Role = "Orders",
-                            RoleGroupId = 1L
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 11, 29, 9, 29, 7, 817, DateTimeKind.Local).AddTicks(8999),
-                            Role = "Categories",
-                            RoleGroupId = 2L
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 11, 29, 9, 29, 7, 817, DateTimeKind.Local).AddTicks(9000),
-                            Role = "Variants",
-                            RoleGroupId = 2L
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 11, 29, 9, 29, 7, 817, DateTimeKind.Local).AddTicks(9001),
-                            Role = "Products",
-                            RoleGroupId = 2L
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 11, 29, 9, 29, 7, 817, DateTimeKind.Local).AddTicks(9001),
-                            Role = "Orders",
-                            RoleGroupId = 2L
+                            Password = "0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90"
                         });
                 });
 
@@ -503,58 +392,6 @@ namespace XComm.Api.Migrations
                     b.ToTable("MasterProducts");
                 });
 
-            modelBuilder.Entity("XComm.Api.DataModel.RoleGroup", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("GroupName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroupName")
-                        .IsUnique();
-
-                    b.ToTable("RoleGroups");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 11, 29, 9, 29, 7, 817, DateTimeKind.Local).AddTicks(8974),
-                            GroupName = "Customer"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 11, 29, 9, 29, 7, 817, DateTimeKind.Local).AddTicks(8975),
-                            GroupName = "Kasir"
-                        });
-                });
-
             modelBuilder.Entity("XComm.Api.DataModel.UserRoles", b =>
                 {
                     b.Property<long>("Id")
@@ -647,28 +484,6 @@ namespace XComm.Api.Migrations
                     b.ToTable("MasterVariants");
                 });
 
-            modelBuilder.Entity("XComm.Api.DataModel.Account", b =>
-                {
-                    b.HasOne("XComm.Api.DataModel.RoleGroup", "RoleGroup")
-                        .WithMany()
-                        .HasForeignKey("RoleGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RoleGroup");
-                });
-
-            modelBuilder.Entity("XComm.Api.DataModel.AuthorizationGroup", b =>
-                {
-                    b.HasOne("XComm.Api.DataModel.RoleGroup", "RoleGroup")
-                        .WithMany("AuthorizationGroups")
-                        .HasForeignKey("RoleGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RoleGroup");
-                });
-
             modelBuilder.Entity("XComm.Api.DataModel.OrderDetail", b =>
                 {
                     b.HasOne("XComm.Api.DataModel.OrderHeader", "Header")
@@ -719,11 +534,6 @@ namespace XComm.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("XComm.Api.DataModel.RoleGroup", b =>
-                {
-                    b.Navigation("AuthorizationGroups");
                 });
 #pragma warning restore 612, 618
         }

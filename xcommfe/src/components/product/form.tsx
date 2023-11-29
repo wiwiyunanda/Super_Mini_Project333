@@ -6,6 +6,7 @@ import { IVariant } from '../../interfaces/iVariant';
 import { IProduct } from '../../interfaces/iProduct';
 
 interface IProps {
+
     product: IProduct;
     categories: ICategory[];
     variants: IVariant[];
@@ -22,25 +23,36 @@ export default class Form extends React.Component<IProps, IState> {
     }
 
     render() {
-        const { categories, variants, product, command, changeHandler, checkBoxHandler } = this.props;
+        const {categories, variants, product, command, changeHandler, checkBoxHandler } = this.props;
         return (           
             <>
                 <form>
                 <div className="mb-6">
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Category
-                </label>
-                <select
-                    id="countries"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value={product.variant.categoryId}
-                    onChange={changeHandler("categoryId")}
-                >
-                <option selected>Choose a variant</option>
-                {variants.map((o: IVariant) => {
-                return <option value={o.id}>{o.name}</option>;
-                })}
-                </select>
-                </div>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Category</label>
+                        <select id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value={product.categoryId} onChange={changeHandler('categoryId')}>
+                            <option selected value="0">Choose a Category</option>
+                            {
+                                categories.map((o: ICategory) => {
+                                    return (
+                                        <option value={o.id}>{o.name}</option>
+                                    )
+                                })
+                            }
+                        </select>
+                    </div>
+                    <div className="mb-6">
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Variant</label>
+                        <select id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value={product.variantId} onChange={changeHandler('variantId')}>
+                            <option selected value="0">Choose a Variant</option>
+                            {
+                                variants.map((o: IVariant) => {
+                                    return (
+                                        <option value={o.id}>{o.name}</option>
+                                    )
+                                })
+                            }
+                        </select>
+                    </div>
                 <div className="mb-6">
                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Initial</label>
                         <input readOnly={command == ECommand.changeStatus} type="text" id="initial" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value={product.initial} onChange={changeHandler('initial')}/>

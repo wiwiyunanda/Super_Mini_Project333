@@ -21,7 +21,14 @@ namespace XComm.Api.DataModel
         [Required, MaxLength(50)]
         public string LastName { get; set; }
 
+        [Required, DataType(DataType.EmailAddress), MaxLength(200)]
+        public string Email { get; set; }
+        public string? Otp { get; set; }
+        public int Attempt { get; set; }
+        public long RoleGroupId { get; set; }
         public bool Active { get; set; }
 
+        [ForeignKey("RoleGroupId")]
+        public virtual RoleGroup RoleGroup { get; set; }
     }
 }

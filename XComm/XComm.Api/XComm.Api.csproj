@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Framework.Auth\Framework.Auth.csproj" />
     <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
   </ItemGroup>
 

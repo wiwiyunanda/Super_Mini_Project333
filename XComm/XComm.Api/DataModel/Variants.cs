@@ -9,7 +9,7 @@ namespace XComm.Api.DataModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
-        public long CategoryId { get; set; }
+        public long CategoryId { get; set;}
         [Required, MaxLength(10)]
         public string Initial { get; set; }
         [Required, MaxLength(50)]
