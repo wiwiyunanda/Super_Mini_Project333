@@ -7,7 +7,8 @@ import { Variant } from "../variant";
 import { Product } from "../product";
 import { Gallery } from "../gallery";
 import { Authentication } from "../auth";
-// import { ProtectedRoute } from "./protectedRoute";
+import { ProtectedRoute } from "./protectedRoute";
+import { AuthService } from '../../services/authService';
 
 export default class SideBar extends React.Component {
   render() {
@@ -30,7 +31,10 @@ export default class SideBar extends React.Component {
                     </span>
                   </a>
                 </li>
-                <li className="rounded-sm">
+                {
+                  AuthService.getToken() ?
+                  (<>
+                  <li className="rounded-sm">
                   <a
                     href="#"
                     className="flex items-center p-2 space-x-3 rounded-md"
@@ -70,6 +74,9 @@ export default class SideBar extends React.Component {
                     </span>
                     </a>
                 </li>
+                  </>): null
+                }
+                
                 <li className="rounded-sm">
                   <a
                     href="#"
@@ -87,11 +94,13 @@ export default class SideBar extends React.Component {
         <div className="w-full grid grid-cols-1 gap-3 px-8 h-1/2 text-center">
           <Routes>
             <Route path="/" Component={Home} />
-            <Route path="/categories" Component={Category} />
-            <Route path="/variants" Component={Variant} />
-            <Route path="/products" Component={Product} />
-            <Route path="/galleries" Component={Gallery} />
-            <Route path="/auth" Component={Authentication} />
+            <Route element={<ProtectedRoute/>} >
+            <Route path="/categories" element={<Category/>} />
+            <Route path="/variants" element={<Variant/>} />
+            <Route path="/products" element={<Product/>} />
+            <Route path="/galleries" element={<Gallery/>} />
+            </Route>
+            <Route path="/auth" element={<Authentication/>} />
           </Routes>
         </div>
       </div>
