@@ -1,56 +1,35 @@
-import React from "react";
+import React from 'react';
 
-import { IProduct } from "../../interfaces/iProduct";
-import { ProductService } from "../../services/productServices";
-import { CategoryService } from "../../services/categoryServices";
-import { VariantService } from "../../services/variantServices";
+import { IVariant } from '../../interfaces/iVariant';
+import { VariantService } from '../../services/variantServices';
+import { CategoryService } from '../../services/categoryServices';
 
-import Form from "./form";
-import { ECommand } from "../../enums/eCommand";
-import { ICategory } from "../../interfaces/iCategory";
-import { IVariant } from "../../interfaces/iVariant";
-import { IPagination } from "../../interfaces/iPagination";
-import { config } from "../../configurations/config";
+import Form from './form';
+import { ECommand } from '../../enums/eCommand';
+import { ICategory } from '../../interfaces/iCategory';
+import { IPagination } from '../../interfaces/iPagination';
+import { IProduct } from '../../interfaces/iProduct';
+import { ProductService } from '../../services/productServices';
+import { config } from '../../configurations/config';
+import GalleryGrid from '../gallery/galleryGrid';
+
 
 interface IProps {}
+
 interface IState {
   categories: ICategory[];
   variants: IVariant[];
   products: IProduct[];
   product: IProduct;
-  showModal: boolean;
   command: ECommand;
+  showModal: boolean;
   pagination: IPagination;
+  noImage: any;
+  showGallery: boolean;
+
 }
 
-export default class Product extends React.Component<IProps, IState> {
-  newCategory: ICategory = {
-    id: 0,
-    initial: "",
-    name: "",
-    active: false,
-  };
-  newVariant: IVariant = {
-    id: 0,
-    categoryId: 0,
-    initial: "",
-    name: "",
-    active: false,
-    category: this.newCategory,
-  };
-  newProduct: IProduct = {
-    id: 0,
-    categoryId: 0,
-    variantId: 0,
-    initial: "",
-    name: "",
-    active: false,
-    variant: this.newVariant,
-    description: "",
-    price: 0,
-    stock: 0,
-  };
-
+export default class Products extends React.Component<IProps, IState> {
   newPagination: IPagination = {
     pageNum: 1,
     rows: config.rowsPerPage[0],
@@ -59,6 +38,28 @@ export default class Product extends React.Component<IProps, IState> {
     sort: 1,
     pages: 0,
   };
+
+  newCategory: ICategory = {
+    id: 0,
+    initial: "",
+    name: "",
+    active: false,
+  };
+
+  newVariant: IVariant = {
+    id: 0,
+    categoryId: 0,
+    initial: "",
+    name: "",
+    active: false,
+    category: this.newCategory,
+  };
+
+  newProduct: IProduct = {
+    id: 0, categoryId: 0, variantId: 0, initial: '', name: '', active: false, variant: this.newVariant, galleryId: 0, base64: '', description: '', price: 0, stock: 0
+
+  };
+
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -69,6 +70,8 @@ export default class Product extends React.Component<IProps, IState> {
       showModal: false,
       command: ECommand.create,
       pagination: this.newPagination,
+      noImage: config.noImage,
+      showGallery: false
     };
   }
 
@@ -94,33 +97,36 @@ export default class Product extends React.Component<IProps, IState> {
     }
   };
 
+
   loadProducts = async () => {
     const { pagination } = this.state;
-    const result = await ProductService.getAll();
+    const result = await ProductService.getAll(pagination);
     if (result.success) {
       const catResult = await CategoryService.getAll(pagination);
       if (catResult.success) {
         this.setState({
-          categories: catResult.result,
+          categories: catResult.result.data,
         });
       }
+      console.log(result.result);
       this.setState({
         products: result.result,
       });
     } else {
-      alert("Error:" + result.result);
+      alert("Error: " + result.result);
     }
   };
 
   setShowModal = (val: boolean) => {
     this.setState({
       showModal: val,
+      showGallery: val
     });
     console.log(this.state.showModal);
   };
 
   changeHandler = (name: any) => (event: any) => {
-    if (name == "categoryId") {
+    if (name === "categoryId") {
       VariantService.getByParentId(event.target.value).then((result) => {
         this.setState({
           variants: result.result,
@@ -150,8 +156,9 @@ export default class Product extends React.Component<IProps, IState> {
       product: this.newProduct,
       command: ECommand.create,
     });
-    //this.setShowModal(true);
+    // this.setShowModal(true);
   };
+
   updateCommand = async (id: number) => {
     await ProductService.getById(id)
       .then((result) => {
@@ -161,15 +168,43 @@ export default class Product extends React.Component<IProps, IState> {
             product: result.result,
             command: ECommand.edit,
           });
-          this.loadProducts();
         } else {
-          alert("error" + result.result);
+          alert("Error result" + result.result);
         }
       })
       .catch((error) => {
-        alert("error" + error);
+        alert("Error" + error);
       });
   };
+
+  openGallery = async (productId: number) => {
+    this.setState({
+        showGallery: true,
+        product: {
+            ...this.state.product,
+            id: productId
+        }
+    })
+}
+
+selectGalery = async (galleryId: number) => {
+    const { id } = this.state.product;
+    ProductService.changeGallery(id, galleryId)
+        .then(result => {
+            if (result.success) {
+                this.setState({
+                    showGallery: false
+                })
+                this.loadProducts();
+            } else {
+                alert('Error result ' + result.result);
+            }
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
+
 
   changeStatusCommand = async (id: number) => {
     await ProductService.getById(id)
@@ -182,15 +217,15 @@ export default class Product extends React.Component<IProps, IState> {
           });
           this.loadProducts();
         } else {
-          alert("Error result " + result.result);
+          alert("Error result" + result.result);
         }
       })
       .catch((error) => {
-        alert("Error error" + error);
+        alert("Error result" + error);
       });
   };
 
-  changeRowsPerPage = (name: any) => (event: any) => {
+  changeRowPerPage = (name: any) => (event: any) => {
     this.setState({
       pagination: {
         ...this.state.pagination,
@@ -228,9 +263,8 @@ export default class Product extends React.Component<IProps, IState> {
   };
 
   submitHandler = async () => {
-    const { product } = this.state;
-    const { command } = this.state;
-    if (command == ECommand.create) {
+    const { command, product } = this.state;
+    if (command === ECommand.create) {
       await ProductService.post(this.state.product)
         .then((result) => {
           if (result.success) {
@@ -240,7 +274,7 @@ export default class Product extends React.Component<IProps, IState> {
             });
             this.loadProducts();
           } else {
-            alert("Error result" + result.result);
+            alert("Error result " + result.result);
           }
         })
         .catch((error) => {
@@ -256,13 +290,13 @@ export default class Product extends React.Component<IProps, IState> {
             });
             this.loadProducts();
           } else {
-            alert("Error result" + result.result);
+            alert("Error result " + result.result);
           }
         })
         .catch((error) => {
           alert("Error result" + error);
         });
-    } else if (command == ECommand.changeStatus) {
+    } else if (command === ECommand.changeStatus) {
       await ProductService.changeStatus(product.id, product.active)
         .then((result) => {
           if (result.success) {
@@ -283,12 +317,14 @@ export default class Product extends React.Component<IProps, IState> {
 
   render() {
     const {
-      categories,
       variants,
+      categories,
       products,
       product,
       showModal,
+      showGallery,
       command,
+      noImage,
       pagination,
     } = this.state;
     const loopPages = () => {
@@ -300,55 +336,57 @@ export default class Product extends React.Component<IProps, IState> {
     };
     return (
       <div>
-        <div className="text-left text-3xl pt-5 text-center">Products</div>
-        <span>{JSON.stringify(pagination)}</span>
+        <div className="text-left text-3xl pt-5">Products</div>
+        <span>{JSON.stringify(product)}</span>
         <div className="flex" aria-label="Button">
           <button
-            className="my-8 justify-start h-8 px-4 text-green-100 transition-colors duration-150 
-                 bg-green-700 rounded focus:shadow-outline hover:bg-green-800"
+            className="my-8 justify-start h-8 px-4 text-green-100 transition-colors duration-150 bg-green-700 rounded focus:shadow-outline hover:bg-green-800"
             onClick={() => this.createCommand()}
           >
             Create New{" "}
           </button>
         </div>
-        <table className="w-full text-sm text-left text-gray-50  dark:bg-gray-700 dark:text-gray-400">
-          <thead className="text-xs text-gray-300 uppercase bg-gray-50">
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr className="border-b dark:bg-gray-900 dark:border-gray-700">
-              <th scope="col" className="px-6 py-3 w-14 h-14">
-                Search:
+              <th colSpan={1} scope="col" className="px-6 py-3 w-14 h-14">
+                {/* grow flex-none  */}
+                Search
               </th>
-              <th colSpan={3} scope="col" className="px-6 py-3 w-14 h-14">
+              <th colSpan={4} scope="col" className="px-6 py-3 w-14 h-14">
                 <input
-                  type="text"
-                  id="search"
+                  type="text" id ="search"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   value={pagination.search}
                   onChange={this.changeSearch("search")}
                 />
               </th>
-              <th scope="col" className="px-6 py-3 w-14 h-14">
+              <th colSpan={1} scope="col" className="px-6 py-3 w-14 h-14">
                 <button
-                  className="my-8 justify-start h-8 px-4 text-green-100 transition-colors duration-150 bg-green-700 rounded focus:shadow-outline hover:bg-green-800"
+                  className="h-8 px-4 text-green-100 transition-colors duration-150 bg-green-700 rounded-l-lg rounded-r-lg focus:shadow-outline hover:bg-green-800"
                   onClick={() => this.loadProducts()}
                 >
                   Filter
                 </button>
               </th>
-              <th colSpan={2} scope="col" className="px-6 py-3 w-14 h-14">
+              <th colSpan={3} scope="col" className="px-6 py-3 w-14 h-14">
                 <select
                   id="countries"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  onChange={this.changeRowsPerPage("sort")}
+                  onChange={this.changeRowPerPage("sort")}
                 >
                   <option value="0">Asc</option>
                   <option value="1">Desc</option>
                 </select>
               </th>
             </tr>
-            <tr className="border-b bg-gray-700 border-gray-700">
+            <tr className="border-b dark:bg-gray-900 dark:border-gray-700">
+            <th scope="col" className="px-6 py-3 w-14 h-14">
+                Image
+              </th>
               <th scope="col" className="px-6 py-3 w-14 h-14">
-                Category/Variant
+                Category/Variants
               </th>
               <th scope="col" className="px-6 py-3 w-14 h-14">
                 Initial/Name
@@ -356,10 +394,18 @@ export default class Product extends React.Component<IProps, IState> {
               <th scope="col" className="px-6 py-3 w-14 h-14">
                 Description
               </th>
-              <th scope="col" className="px-6 py-3 w-14 h-14">
+              <th
+                scope="col"
+                className="px-6 py-3 w-14 h-14"
+                onClick={() => this.changeOrder("order")}
+              >
                 Price
               </th>
-              <th scope="col" className="px-6 py-3 w-14 h-14">
+              <th
+                scope="col"
+                className="px-6 py-3 w-14 h-14"
+                onClick={() => this.changeOrder("stock")}
+              >
                 Stock
               </th>
               <th scope="col" className="px-6 py-3 w-14 h-14">
@@ -371,22 +417,29 @@ export default class Product extends React.Component<IProps, IState> {
             </tr>
           </thead>
           <tbody>
-            {products?.map((o: IProduct) => {
+            {products?.map((prod: IProduct) => {
               return (
-                <tr key={o.id} className="border-b bg-gray-800 border-gray-700">
-                  <td scope="row" className="px-6 py-4">
-                    {o.variant.category?.initial}/{o.variant.initial}
+                <tr
+                  key={prod.id}
+                  className="border-b dark:bg-gray-800 dark:border-gray-700"
+                >
+                  <td className="px-6 py-4" onClick={() => this.openGallery(prod.id)}>
+                                        <img src={prod.base64 ? prod.base64 : noImage} />
+                                    </td>
+
+                  <td className="px-6 py-4">
+                    {prod.variant.category.initial}/{prod.variant.initial}
                   </td>
                   <td className="px-6 py-4">
-                    {o.initial}/{o.name}
+                    {prod.initial}/{prod.name}
                   </td>
-                  <td className="px-6 py-4">{o.description}</td>
-                  <td className="px-6 py-4">{o.price}</td>
-                  <td className="px-6 py-4">{o.stock}</td>
+                  <td className="px-6 py-4">{prod.description}</td>
+                  <td className="px-6 py-4">{prod.price}</td>
+                  <td className="px-6 py-4">{prod.stock}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center">
                       <input
-                        checked={o.active}
+                        checked={prod.active}
                         id="checked-checkbox"
                         type="checkbox"
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -401,13 +454,13 @@ export default class Product extends React.Component<IProps, IState> {
                     >
                       <button
                         className="h-8 px-4 text-green-100 transition-colors duration-150 bg-green-700 rounded-l-lg focus:shadow-outline hover:bg-green-800"
-                        onClick={() => this.updateCommand(o.id)}
+                        onClick={() => this.updateCommand(prod.id)}
                       >
                         Edit
                       </button>
                       <button
                         className="h-8 px-4 text-blue-100 transition-colors duration-150 bg-blue-700 rounded-r-lg focus:shadow-outline hover:bg-blue-800"
-                        onClick={() => this.changeStatusCommand(o.id)}
+                        onClick={() => this.changeStatusCommand(prod.id)}
                       >
                         Status
                       </button>
@@ -418,76 +471,96 @@ export default class Product extends React.Component<IProps, IState> {
             })}
           </tbody>
           <tfoot className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr className="border-b dark:bg-gray-900 dark:border-gray-700">
-              <th colSpan={6} scope="col" className="px-6 py-3 w-14 h-14">
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Rows per page:
+            <tr>
+              <th scope="col" className="px-6 py-3 w-14 h-14">
+                <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                  Rows per page
                 </label>
               </th>
               <th scope="col" className="px-6 py-3 w-14 h-14">
                 <select
                   id="countries"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  onClick={this.changeRowsPerPage("rows")}
+                  onChange={this.changeRowPerPage("rows")}
                 >
                   {config.rowsPerPage.map((o: number) => {
                     return <option value={o}>{o}</option>;
                   })}
                 </select>
               </th>
+              <th scope="col" className="px-6 py-3 w-14 h-14"></th>
+              <th scope="col" className="px-6 py-3 w-14 h-14"></th>
+              <th scope="col" className="px-6 py-3 w-14 h-14"></th>
+              <th scope="col" className="px-6 py-3 w-14 h-14">
+                Page:
+              </th>
+              <th colSpan={3} scope="col" className="px-6 py-3 w-14 h-14">
+                <select
+                  id="countries"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  onChange={this.changeRowPerPage("pageNum")}
+                >
+                  {loopPages()}
+                </select>
+              </th>
             </tr>
           </tfoot>
         </table>
         {showModal ? (
-          <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none ">
-            <div className="relative w-auto my-6 mx-auto max-w-3xl ">
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none dark:bg-gray-900">
-                <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
+          <div className="fixed inset-0 z-50 overflow-hidden">
+            <div className="flex justify-center items-center min-h-screen px-4 pt-4 pb-20 text-center">
+              <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden overflow-y-auto">
+                <div className="flex items-start justify-between p-5 border-b border-gray-300 dark:border-gray-700 rounded-t">
                   <h3 className="text-3xl text-gray-900 dark:text-white">
                     {command.valueOf()}
                   </h3>
                   <button
-                    className="bg-transparent border-0 text-black float-right"
+                    className="text-black float-right"
                     onClick={() => this.setShowModal(false)}
                   >
-                    <span className="text-black opacity-7 h-6 w-6 text-xl block bg-gray-400 py-0 rounded-full">
-                      x
+                    <span className="text-black opacity-70 h-6 w-6 text-xl block bg-gray-400 dark:bg-gray-700 py-0 rounded-full">
+                      ×
                     </span>
                   </button>
                 </div>
-                <div className="relative p-6 flex-auto">
-                  <Form
-                    categories={categories}
-                    variants={variants}
-                    product={product}
-                    command={command}
-                    changeHandler={this.changeHandler}
-                    checkBoxHandler={this.checkBoxHandler}
-                  />
-                </div>
-                <div
-                  className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b"
-                  role="group"
-                  aria-label="Button group"
-                >
-                  <button
-                    className="my-8 justify-start h-8 px-4 text-green-100 transition-colors duration-150 bg-green-700 rounded-l-lg focus:shadow-outline hover:bg-green-800"
-                    onClick={() => this.setShowModal(false)}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="my-8 justify-start h-8 px-4 text-blue-100 transition-colors duration-150 bg-blue-700 rounded-r-lg focus:shadow-outline hover:bg-blue-800"
-                    onClick={() => this.submitHandler()}
-                  >
-                    Submit
-                  </button>
+                <div className="p-6 overflow-y-auto max-h-96">
+                  {/* Adjust max-h-96 to the maximum height you want before scrolling starts */}
+                  <Form categories={categories} variants={variants} product={product} command={command} changeHandler={this.changeHandler} checkBoxHandler={this.checkBoxHandler} />
+                  </div>
+                  <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b" role="group" aria-label="Button group">
+                  <button className="my-8 justify-start h-8 px-4 text-green-100 transition-colors duration-150 bg-green-700 rounded-l-lg focus:shadow-outline hover:bg-green-800" onClick={() => this.setShowModal(false)}>Close</button>
+                  <button className="my-8 justify-start h-8 px-4 text-blue-100 transition-colors duration-150 bg-blue-700 rounded-r-lg focus:shadow-outline hover:bg-blue-800" onClick={() => this.submitHandler()}>Submit</button>
                 </div>
               </div>
             </div>
           </div>
         ) : null}
-      </div>
+        {
+          showGallery ? (
+            <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+                <div className="relative w-auto my-6 mx-auto max-w-3xl ">
+                    <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none dark:bg-gray-900">
+                        <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
+                            <h3 className="text-3xl text-gray-900 dark:text-white">Gallery</h3>
+                            <button
+                                className="bg-transparent border-0 text-black float-right"
+                                onClick={() => this.setShowModal(false)}
+                            >
+                                <span className="text-black opacity-7 h-6 w-6 text-xl block bg-gray-400 py-0 rounded-full">
+                                    x
+                                </span>
+                            </button>
+                        </div>
+                        <div className="relative p-6 flex-auto">
+                            <GalleryGrid selectGalery={this.selectGalery} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ) : null
+    }
+</div>
+
     );
   }
 }

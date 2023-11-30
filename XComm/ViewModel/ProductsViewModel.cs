@@ -9,13 +9,18 @@ namespace ViewModel
 {
     public class ProductsViewModel
     {
-        public long? Id { get; set; }
+        public long Id { get; set; }
         public long VariantId { get; set; }
         public VariantsViewModel? Variant { get; set; }
+        public long? GalleryId { get; set; }
+        public string Base64 { get; set; }
+
         [Required, MaxLength(10)]
         public string Initial { get; set; }
+
         [Required, MaxLength(50)]
         public string Name { get; set; }
+
         [Required, MaxLength(500)]
         public string Description { get; set; }
         public decimal Price { get; set; }

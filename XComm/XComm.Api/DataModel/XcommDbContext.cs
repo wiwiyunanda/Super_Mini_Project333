@@ -78,6 +78,11 @@ namespace XComm.Api.DataModel
                 .IsUnique();
 
             modelBuilder.Entity<Products>()
+                .Property(o => o.GalleryId)
+                .IsRequired(false);
+
+
+            modelBuilder.Entity<Products>()
                 .Property(o => o.Price)
                 .HasColumnType("decimal(18,4)");
 

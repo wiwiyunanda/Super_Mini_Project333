@@ -46,5 +46,12 @@ namespace XComm.Api.Controllers
         {
             return _repo.ChangeStatus(id, status);
         }
+
+        [HttpPut("changeGallery/{id}/{galleryId}")]
+        public async Task<ProductsViewModel> ChangeGallery(long id, long galleryId)
+        {
+            return _repo.ChangeGallery(id, galleryId);
+        }
+
     }
 }
