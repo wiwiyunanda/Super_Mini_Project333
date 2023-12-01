@@ -156,6 +156,7 @@ namespace XComm.Api.Repositories
                               Description = o.Description,
                               Price = o.Price,
                               Stock = o.Stock,
+                              Base64 = o.Gallery.Base64Small,
                               Active = o.Active
                           }).FirstOrDefault();
                 if (result == null)

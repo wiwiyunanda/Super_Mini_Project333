@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
+import { FaCircleXmark } from "react-icons/fa6";
 
-import { IVariant } from '../../interfaces/iVariant';
-import { VariantService } from '../../services/variantServices';
-import { CategoryService } from '../../services/categoryServices';
+import { IVariant } from "../../interfaces/iVariant";
+import { VariantService } from "../../services/variantServices";
+import { CategoryService } from "../../services/categoryServices";
 
-import Form from './form';
-import { ECommand } from '../../enums/eCommand';
-import { ICategory } from '../../interfaces/iCategory';
-import { IPagination } from '../../interfaces/iPagination';
-import { IProduct } from '../../interfaces/iProduct';
-import { ProductService } from '../../services/productServices';
-import { config } from '../../configurations/config';
-import GalleryGrid from '../gallery/galleryGrid';
-
+import Form from "./form";
+import { ECommand } from "../../enums/eCommand";
+import { ICategory } from "../../interfaces/iCategory";
+import { IPagination } from "../../interfaces/iPagination";
+import { IProduct } from "../../interfaces/iProduct";
+import { ProductService } from "../../services/productServices";
+import { config } from "../../configurations/config";
+import GalleryGrid from "../gallery/galleryGrid";
 
 interface IProps {}
 
@@ -26,7 +26,6 @@ interface IState {
   pagination: IPagination;
   noImage: any;
   showGallery: boolean;
-
 }
 
 export default class Products extends React.Component<IProps, IState> {
@@ -56,8 +55,18 @@ export default class Products extends React.Component<IProps, IState> {
   };
 
   newProduct: IProduct = {
-    id: 0, categoryId: 0, variantId: 0, initial: '', name: '', active: false, variant: this.newVariant, galleryId: 0, base64: '', description: '', price: 0, stock: 0
-
+    id: 0,
+    categoryId: 0,
+    variantId: 0,
+    initial: "",
+    name: "",
+    active: false,
+    variant: this.newVariant,
+    galleryId: 0,
+    base64: "",
+    description: "",
+    price: 0,
+    stock: 0,
   };
 
   constructor(props: IProps) {
@@ -71,7 +80,7 @@ export default class Products extends React.Component<IProps, IState> {
       command: ECommand.create,
       pagination: this.newPagination,
       noImage: config.noImage,
-      showGallery: false
+      showGallery: false,
     };
   }
 
@@ -97,30 +106,33 @@ export default class Products extends React.Component<IProps, IState> {
     }
   };
 
-
   loadProducts = async () => {
     const { pagination } = this.state;
-    const result = await ProductService.getAll(pagination);
-    if (result.success) {
-      const catResult = await CategoryService.getAll(pagination);
-      if (catResult.success) {
-        this.setState({
-          categories: catResult.result.data,
+    await ProductService.getPagination(pagination).then((result) => {
+      console.log(result);
+      if (result.success) {
+        CategoryService.getAll(pagination).then((catResult) => {
+          console.log(catResult);
+          if (catResult.success) {
+            this.setState({
+              categories: catResult.result,
+            });
+          }
+          console.log(result.result);
+          this.setState({
+            products: result.result,
+          });
         });
+      } else {
+        alert("Error: " + result.result);
       }
-      console.log(result.result);
-      this.setState({
-        products: result.result,
-      });
-    } else {
-      alert("Error: " + result.result);
-    }
+    });
   };
 
   setShowModal = (val: boolean) => {
     this.setState({
       showModal: val,
-      showGallery: val
+      showGallery: val,
     });
     console.log(this.state.showModal);
   };
@@ -157,6 +169,7 @@ export default class Products extends React.Component<IProps, IState> {
       command: ECommand.create,
     });
     // this.setShowModal(true);
+    console.log(this.state.categories, this.state.variants);
   };
 
   updateCommand = async (id: number) => {
@@ -179,32 +192,31 @@ export default class Products extends React.Component<IProps, IState> {
 
   openGallery = async (productId: number) => {
     this.setState({
-        showGallery: true,
-        product: {
-            ...this.state.product,
-            id: productId
-        }
-    })
-}
+      showGallery: true,
+      product: {
+        ...this.state.product,
+        id: productId,
+      },
+    });
+  };
 
-selectGalery = async (galleryId: number) => {
+  selectGalery = async (galleryId: number) => {
     const { id } = this.state.product;
     ProductService.changeGallery(id, galleryId)
-        .then(result => {
-            if (result.success) {
-                this.setState({
-                    showGallery: false
-                })
-                this.loadProducts();
-            } else {
-                alert('Error result ' + result.result);
-            }
-        }).catch(error => {
-            console.log(error);
-        })
-    }
-
-
+      .then((result) => {
+        if (result.success) {
+          this.setState({
+            showGallery: false,
+          });
+          this.loadProducts();
+        } else {
+          alert("Error result " + result.result);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   changeStatusCommand = async (id: number) => {
     await ProductService.getById(id)
@@ -343,7 +355,7 @@ selectGalery = async (galleryId: number) => {
             className="my-8 justify-start h-8 px-4 text-green-100 transition-colors duration-150 bg-green-700 rounded focus:shadow-outline hover:bg-green-800"
             onClick={() => this.createCommand()}
           >
-            Create New{" "}
+            Create New
           </button>
         </div>
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -355,7 +367,8 @@ selectGalery = async (galleryId: number) => {
               </th>
               <th colSpan={4} scope="col" className="px-6 py-3 w-14 h-14">
                 <input
-                  type="text" id ="search"
+                  type="text"
+                  id="search"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   value={pagination.search}
@@ -382,7 +395,7 @@ selectGalery = async (galleryId: number) => {
               </th>
             </tr>
             <tr className="border-b dark:bg-gray-900 dark:border-gray-700">
-            <th scope="col" className="px-6 py-3 w-14 h-14">
+              <th scope="col" className="px-6 py-3 w-14 h-14">
                 Image
               </th>
               <th scope="col" className="px-6 py-3 w-14 h-14">
@@ -423,9 +436,12 @@ selectGalery = async (galleryId: number) => {
                   key={prod.id}
                   className="border-b dark:bg-gray-800 dark:border-gray-700"
                 >
-                  <td className="px-6 py-4" onClick={() => this.openGallery(prod.id)}>
-                                        <img src={prod.base64 ? prod.base64 : noImage} />
-                                    </td>
+                  <td
+                    className="px-6 py-4"
+                    onClick={() => this.openGallery(prod.id)}
+                  >
+                    <img src={prod.base64 ? prod.base64 : noImage} />
+                  </td>
 
                   <td className="px-6 py-4">
                     {prod.variant.category.initial}/{prod.variant.initial}
@@ -525,42 +541,55 @@ selectGalery = async (galleryId: number) => {
                 </div>
                 <div className="p-6 overflow-y-auto max-h-96">
                   {/* Adjust max-h-96 to the maximum height you want before scrolling starts */}
-                  <Form categories={categories} variants={variants} product={product} command={command} changeHandler={this.changeHandler} checkBoxHandler={this.checkBoxHandler} />
-                  </div>
-                  <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b" role="group" aria-label="Button group">
-                  <button className="my-8 justify-start h-8 px-4 text-green-100 transition-colors duration-150 bg-green-700 rounded-l-lg focus:shadow-outline hover:bg-green-800" onClick={() => this.setShowModal(false)}>Close</button>
-                  <button className="my-8 justify-start h-8 px-4 text-blue-100 transition-colors duration-150 bg-blue-700 rounded-r-lg focus:shadow-outline hover:bg-blue-800" onClick={() => this.submitHandler()}>Submit</button>
+                  <Form
+                    categories={categories}
+                    variants={variants}
+                    product={product}
+                    command={command}
+                    changeHandler={this.changeHandler}
+                    checkBoxHandler={this.checkBoxHandler}
+                  />
+                </div>
+                <div
+                  className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b"
+                  role="group"
+                  aria-label="Button group"
+                >
+                  <button
+                    className="my-8 justify-start h-8 px-4 text-green-100 transition-colors duration-150 bg-green-700 rounded-l-lg focus:shadow-outline hover:bg-green-800"
+                    onClick={() => this.setShowModal(false)}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="my-8 justify-start h-8 px-4 text-blue-100 transition-colors duration-150 bg-blue-700 rounded-r-lg focus:shadow-outline hover:bg-blue-800"
+                    onClick={() => this.submitHandler()}
+                  >
+                    Submit
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         ) : null}
-        {
-          showGallery ? (
-            <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-                <div className="relative w-auto my-6 mx-auto max-w-3xl ">
-                    <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none dark:bg-gray-900">
-                        <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
-                            <h3 className="text-3xl text-gray-900 dark:text-white">Gallery</h3>
-                            <button
-                                className="bg-transparent border-0 text-black float-right"
-                                onClick={() => this.setShowModal(false)}
-                            >
-                                <span className="text-black opacity-7 h-6 w-6 text-xl block bg-gray-400 py-0 rounded-full">
-                                    x
-                                </span>
-                            </button>
-                        </div>
-                        <div className="relative p-6 flex-auto">
-                            <GalleryGrid selectGalery={this.selectGalery} />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        ) : null
-    }
-</div>
+        {showGallery ? (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75">
+            <div className="bg-white p-5 rounded-lg max-w-md w-full max-h-full overflow-y-auto">
+              <div className="text-3xl text-slate-800 items-center flex justify-between">
+                Gallery
+                <FaCircleXmark
+                  className="hover:cursor-pointer focus:cursor-default"
+                  onClick={() => this.setShowModal(false)}
+                />
+              </div>
 
+              <div className="relative p-6 flex-auto">
+                <GalleryGrid selectGalery={this.selectGalery} />
+              </div>
+            </div>
+          </div>
+        ) : null}
+      </div>
     );
   }
 }
