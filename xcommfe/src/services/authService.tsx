@@ -43,7 +43,7 @@ export const AuthService = {
             id: 0,
             userName: localStorage.getItem('userName') || '',
             firstName: localStorage.getItem('firstName') || '',
-            lastName: localStorage.getItem('firstName') || '',
+            lastName: localStorage.getItem('lastName') || '',
             active: true,
             email: '',
             token: '',
