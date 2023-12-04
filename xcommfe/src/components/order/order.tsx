@@ -164,10 +164,20 @@ export default class Order extends React.Component<IProps, IState> {
                 Grand Total
           </th>
           <th scope="col" className="px-6 py-3 w-14 h-14">
-                <input readOnly={true} type="number" className={inputCls} value={details.reduce((a, b) => (a+b['quantity'] || 0), 0)} />
+                <input readOnly={true} type="number" className={inputCls} 
+                value={
+                  details.reduce((a, b) => (
+                    parseFloat(a.toString()) + parseFloat((b['quantity']).toString()) ||0
+                  ), 0)
+                } />
           </th>
           <th scope="col" className="px-6 py-3 w-14 h-14">
-                <input readOnly={true} type= "number" className={inputCls} value={details.reduce((a, b) => (a+ b['price'] * b['quantity'] || 0), 0)} />
+                <input readOnly={true} type= "number" className={inputCls}
+                value={
+                  details.reduce((a, b) => (
+                    parseFloat(a.toString()) + parseFloat((b['price']).toString()) * parseFloat((b['quantity']).toString()) ||0
+                  ), 0)
+                } />
           </th>
           <th scope="col" className="px-6 py-3 w-14 h-14">
                 Remove
