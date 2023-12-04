@@ -14,6 +14,7 @@ export const AuthService = {
                 localStorage.setItem('lastName', account.lastName);
                 localStorage.setItem('token', account.token);
                 localStorage.setItem('roles', JSON.stringify(account.roles));
+                console.log(account.roles);
                 console.log(JSON.stringify(account.roles));
                 return {
                     success: (respons.status == 200),
@@ -42,7 +43,7 @@ export const AuthService = {
             id: 0,
             userName: localStorage.getItem('userName') || '',
             firstName: localStorage.getItem('firstName') || '',
-            lastName: localStorage.getItem('lastName') || '',
+            lastName: localStorage.getItem('firstName') || '',
             active: true,
             email: '',
             token: '',

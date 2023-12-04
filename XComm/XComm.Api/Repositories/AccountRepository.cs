@@ -11,7 +11,49 @@ namespace XComm.Api.Repositories
         {
             _dbContext = dbContext;
         }
-        
+
+        public AccountViewModel Registration(RegisterViewModel model)
+        {
+            AccountViewModel result = new AccountViewModel();
+            Account exist = _dbContext.Account
+                .Where(o => o.UserName == model.UserName)
+                .FirstOrDefault();
+
+            if (exist == null)
+            {
+                Account account = new Account()
+                {
+                    UserName = model.UserName,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    Password = model.Password,
+                    RoleGroupId = 1,
+                    Active = true,
+                    CreatedBy = "admin",
+                    CreatedDate = DateTime.Now,
+                };
+
+                _dbContext.Account.Add(account);
+                _dbContext.SaveChanges();
+
+                result = new AccountViewModel()
+                {
+                    Id = account.Id,
+                    UserName = account.UserName,
+                    FirstName = account.FirstName,
+                    LastName = account.LastName,
+                    Email = account.Email,
+                    Active = account.Active
+                };
+                result.Roles = Roles(account.RoleGroupId);
+            }
+
+            return result;
+        }
+
+
+
         public AccountViewModel Authentication(LoginViewModel model)
         {
             AccountViewModel result = new AccountViewModel();
@@ -31,44 +73,6 @@ namespace XComm.Api.Repositories
                 };
 
                 result.Roles = Roles(account.RoleGroupId);
-            }
-            return result;
-        }
-
-        public AccountViewModel Register(RegisterViewModel model)
-        {
-            AccountViewModel result = new AccountViewModel();
-            try
-            {
-                Account entity = new Account();
-                entity.UserName = model.UserName;
-                entity.Password = model.Password;
-                entity.FirstName = model.FirstName;
-                entity.LastName = model.LastName;
-                entity.Email = model.Email;
-                entity.CreatedBy = "Ikaa";
-                entity.CreatedDate = DateTime.Now;
-                _dbContext.Account.Add(entity);
-                _dbContext.SaveChanges();
-
-                model.UserName = entity.UserName;
-
-                result = (from o in _dbContext.Account
-                          where o.UserName == model.UserName
-                          select new AccountViewModel
-                          {
-                              Id = o.Id,
-                              UserName = o.UserName,
-                              FirstName = o.FirstName,
-                              LastName = o.LastName,
-                              Email = o.Email,
-                              Roles = Roles(o.RoleGroupId),
-                              Active = o.Active
-                          }).FirstOrDefault();
-            }
-            catch (Exception)
-            {
-                throw;
             }
             return result;
         }
