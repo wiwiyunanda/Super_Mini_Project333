@@ -148,7 +148,8 @@ namespace XComm.Api.DataModel
                     Email = "winkawinoy@gmail.com",
                     Active = true,
                     CreatedDate = DateTime.Now,
-                    CreatedBy = "admin"
+                    CreatedBy = "admin",
+                    RoleGroupId = 2,
                 }, new Account()
                 {
                     Id = 2,
@@ -175,7 +176,8 @@ namespace XComm.Api.DataModel
                 new AuthorizationGroup() { Id = 3, RoleGroupId = 2, Role = "Categories", CreatedBy = "admin", CreatedDate = DateTime.Now },
                 new AuthorizationGroup() { Id = 4, RoleGroupId = 2, Role = "Variants", CreatedBy = "admin", CreatedDate = DateTime.Now },
                 new AuthorizationGroup() { Id = 5, RoleGroupId = 2, Role = "Products", CreatedBy = "admin", CreatedDate = DateTime.Now },
-                new AuthorizationGroup() { Id = 6, RoleGroupId = 2, Role = "Orders", CreatedBy = "admin", CreatedDate = DateTime.Now }
+                new AuthorizationGroup() { Id = 6, RoleGroupId = 2, Role = "Galleries", CreatedBy = "admin", CreatedDate = DateTime.Now },
+                new AuthorizationGroup() { Id = 7, RoleGroupId = 2, Role = "Orders", CreatedBy = "admin", CreatedDate = DateTime.Now }
 
                 );
         }

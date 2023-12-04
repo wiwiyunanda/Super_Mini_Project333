@@ -1,10 +1,11 @@
 import React from "react";
-import { buttonCls } from "../style/styledComponent";
+import { buttonCls, inputCls } from "../style/styledComponent";
 import { IProduct } from "../../interfaces/iProduct";
 import ProductList from "./productList";
 import { DetailModel } from "../models/detailModel";
 import { ProductService } from "../../services/productServices";
 import { ProductModel } from "../models/productModel";
+import { OrderService } from "../../services/orderService";
 
 interface IProps {}
 
@@ -32,9 +33,9 @@ export default class Order extends React.Component<IProps, IState> {
 
   setShowModal = (val: boolean) => {
     this.setState({
-      showModal: val,
-    });
-  };
+      showModal: val
+    })
+  }
 
   selectProduct = (id: number) => {
     ProductService.getById(id).then((result) => {
@@ -53,40 +54,60 @@ export default class Order extends React.Component<IProps, IState> {
           },
           productId: product.id,
           price: product.price,
-          quantity: 1,
-        };
+          quantity: 1
+        }
 
         const { details } = this.state;
         details.push(item);
         this.setState({
           details: details,
-          showModal: false,
-        });
+          showModal: false
+        })
       }
-    });
-  };
+    })
+  }
 
   removeProduct = (idx: number) => {
     const { details } = this.state;
     details.splice(idx, 1);
     this.setState({
       details: details,
-    });
-  };
+    })
+  }
+
+  changeHandler = (idx: number) => (event: any) => {
+    const { details } = this.state;
+    details[idx].quantity = event.target.value;
+    this.setState({
+      details: details,
+    })
+  }
+
+  submitHandler = () => {
+    OrderService.post(this.state.details)
+    .then(result =>{
+      if (result.success){
+        this.setState({
+          details: []
+        })
+      }
+    }).catch(error => {
+      alert(error)
+    })
+  }
 
   render() {
     const { showModal, details } = this.state;
     return (
       <div>
-        {JSON.stringify(details)}
+        {JSON.stringify({amount: details.reduce((a, b) => (a+ (b['price'] * b ['quantity']) || 0), 0), details})}
         <div className="text-left text-3xl pt-5">Orders</div>
         <div className="flex" aria-label="Button">
-          <button className={buttonCls} onClick={this.newItem}>
-            New Item
-          </button>
+          <button className={buttonCls} onClick={this.newItem}>New Item</button>
+          <button className={buttonCls} onClick={this.submitHandler}>Payment</button>
         </div>
         <table className="w-full text-sm ">
-          <thead className="text-xs text-white uppercase bg-gray-700 ">
+          <thead className="text-xs text-white uppercase bg-gray-700">
             <tr className="border-b bg-gray-900 border-gray-700 text-center">
               <th scope="col" className="px-6 py-3 w-14 h-14">
                 Image
@@ -115,25 +136,43 @@ export default class Order extends React.Component<IProps, IState> {
                   key={idx}
                   className="border-b bg-gray-900 border-gray-700 text-white text-center"
                 >
-                  <td>
+                  <td className="px-6 py-4">
                     <img src={o.product.base64} width={128} height={128}></img>
                   </td>
-                  <td>{o.product.name}</td>
-                  <td>{o.price}</td>
-                  <td>{o.quantity}</td>
-                  <td>{o.price * o.quantity}</td>
+                  
                   <td className="px-6 py-4">
-                    <button
-                      className={buttonCls}
-                      onClick={() => this.removeProduct(idx)}
-                    >
-                      Remove
-                    </button>
+                    <input readOnly = {true} type="text" className={inputCls} value={o.product.name}/>
+                  </td>
+                  <td className="px-6 py-4">
+                    <input readOnly = {true} type="number" className={inputCls} value={o.price}/>
+                  </td>
+                  <td className="px-6 py-4">
+                    <input type="number" className={inputCls} value={o.quantity} onChange={this.changeHandler(idx)}/>
+                  </td>
+                  <td className="px-6 py-4">
+                    <input readOnly = {true} type="number" className={inputCls} value={o.price* o.quantity}/>
+                  </td>
+                  <td className="px-6 py-4">
+                    <button className={buttonCls} onClick={() => this.removeProduct(idx)}>Remove</button>
                   </td>
                 </tr>
               );
             })}
           </tbody>
+          <tfoot className="text-xs text-white uppercase bg-gray-700">
+          <th colSpan={3} scope="col" className="px-6 py-3 w-14 h-14">
+                Grand Total
+          </th>
+          <th scope="col" className="px-6 py-3 w-14 h-14">
+                <input readOnly={true} type="number" className={inputCls} value={details.reduce((a, b) => (a+b['quantity'] || 0), 0)} />
+          </th>
+          <th scope="col" className="px-6 py-3 w-14 h-14">
+                <input readOnly={true} type= "number" className={inputCls} value={details.reduce((a, b) => (a+ b['price'] * b['quantity'] || 0), 0)} />
+          </th>
+          <th scope="col" className="px-6 py-3 w-14 h-14">
+                Remove
+          </th>
+          </tfoot>
         </table>
         {showModal ? (
           <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none ">

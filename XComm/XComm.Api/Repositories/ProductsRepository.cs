@@ -186,7 +186,7 @@ namespace XComm.Api.Repositories
             {
                 // Filter Search
                 var query = _dbContext.Products
-                    .Where(o => o.Initial.Contains(search) || o.Name.Contains(search));
+                    .Where(o => o.Initial.Contains(search) || o.Name.Contains(search)) ;
 
                 int count = query.Count();
 
@@ -207,35 +207,36 @@ namespace XComm.Api.Repositories
                                 query.OrderByDescending(o => o.Id);
                             break;
                     }
-                    _result.Data = query.Skip(pageNum - 1)
+                    _result.Data = query.Skip((pageNum - 1) * rows)
                         .Take(rows)
-                        .Select(o => new ProductsViewModel
+                        .Select(o => new ProductsViewModel()
                         {
                             Id = o.Id,
-                            VariantId = o.VariantId,
-                            Variant = new VariantsViewModel()
-                            {
-                                Id = o.Variant.Id,
-                                Initial = o.Variant.Initial,
-                                Name = o.Variant.Name,
-                                Active = o.Variant.Active,
-                                Category = new CategoryViewModel()
-                                {
-                                    Id = o.Variant.Category.Id,
-                                    Initial = o.Variant.Category.Initial,
-                                    Name = o.Variant.Category.Name,
-                                    Active = o.Variant.Category.Active
-                                },
-                            },
-                            GalleryId = o.GalleryId,
-                            Base64 = o.Gallery.Base64Small,
                             Initial = o.Initial,
                             Name = o.Name,
                             Description = o.Description,
                             Price = o.Price,
                             Stock = o.Stock,
-                            Active = o.Active
-                        }).ToList();
+                            Base64 = o.Gallery.Base64Small,
+                            Active = o.Active,
+                            Variant = new VariantsViewModel()
+                                    {
+                                        Id = o.Variant.Id,
+                                        Initial = o.Variant.Initial,
+                                        Name = o.Variant.Name,
+                                        Active = o.Variant.Active,
+                                        Category = new CategoryViewModel()
+                                        {
+                                            Id = o.Variant.Category.Id,
+                                            Initial = o.Variant.Category.Initial,
+                                            Name = o.Variant.Category.Name,
+                                            Active = o.Variant.Category.Active
+                                        }
+                                    },                              
+                            
+                        })
+                        .ToList();
+
                     _result.Pages = (int)Math.Ceiling((decimal)count / (decimal)rows);
 
                     if (_result.Pages < pageNum)
@@ -250,8 +251,7 @@ namespace XComm.Api.Repositories
             }
             catch (Exception ex)
             {
-                _result.Success = false;
-                _result.Message = ex.Message;
+               
                 throw;
             }
             return _result;

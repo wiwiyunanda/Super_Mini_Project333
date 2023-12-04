@@ -6,4 +6,5 @@ export class AccountModel {
     email: string = '';
     active: boolean = true;
     token: string = '';
+    roles: string[] = [];
 }

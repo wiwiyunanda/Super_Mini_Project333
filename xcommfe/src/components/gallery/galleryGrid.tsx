@@ -62,14 +62,10 @@ export default class GalleryGrid extends React.Component<IProps, IState> {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 items-center">
         {galleries.map((o: IGallery) => {
           return (
-            <div>
-              <img
-                className="h-auto max-w-full rounded-lg cursor-pointer"
-                src={o.base64Small}
-                onClick={() => selectGalery(o.id)}
-                alt=""
-              />
-            </div>
+            <div className="border-b dark:bg-gray-800 dark:border-gray-700 w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                <img className="h-auto max-w-full rounded-lg" width={256} height={256} src={o.base64Small} onClick={() => selectGalery(o.id)} alt="" /><br/>
+                                {o.title}
+                            </div>
           );
         })}
       </div>

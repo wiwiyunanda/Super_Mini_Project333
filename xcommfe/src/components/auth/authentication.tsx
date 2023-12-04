@@ -1,24 +1,28 @@
 import React from 'react';
-import { useNavigate } from "react-router-dom";
 import { inputCls, labelCls, buttonCls } from '../style/styledComponent';
 import { IAuthentication } from '../../interfaces/iAuthentication';
 import { AuthService } from '../../services/authService';
+import { withRouter } from '../layout/withRouter';
 
 interface IProps {
+    logged: boolean;
+    changeLoggedHandler: any;
+    navigate: any;
 }
 
 interface IState {
     auth: IAuthentication
 }
 
-export default class Authentication extends React.Component<IProps, IState> {
-    // navigate = useNavigate();
+class Authentication extends React.Component<IProps, IState> {
+
     newAuth: IAuthentication = { userName: '', password: '' };
     constructor(props: IProps) {
         super(props);
         this.state = {
             auth: this.newAuth
         }
+        this.props.changeLoggedHandler(false);
     }
 
     changeHandler = (name: any) => (event: any) => {
@@ -34,17 +38,21 @@ export default class Authentication extends React.Component<IProps, IState> {
         AuthService.logout();
     }
 
-    handleSubmit = () => {
+    handleSubmit = async () => {
         const { auth } = this.state;
+        const { changeLoggedHandler } = this.props;
         AuthService.login(auth)
             .then(result => {
-                console.log(result);
-                // if (result.success) {
-                //     this.navigate('/home');
-                // }
+                if (result.success) {
+                    console.log(result.result);
+                    changeLoggedHandler(true);
+                    this.props.navigate('/');
+                } else {
+                    alert('Error: ' + result.result);
+                }
             })
             .catch(error => {
-                console.log('Error ', error);
+                console.log('Error: ', error);
             })
     }
 
@@ -53,7 +61,7 @@ export default class Authentication extends React.Component<IProps, IState> {
         return (
             <>
                 <div className="text-left text-3xl pt-5">Log in</div>
-                <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none dark:bg-gray-900">
+                <div className="border-0 rounded-lg shadow-lg relative flex flex-col bg-white outline-none focus:outline-none dark:bg-gray-900">
                     <div className="relative p-6 flex-auto">
                         <div className="mb-6">
                             <label className={labelCls}>User Name</label>
@@ -71,5 +79,6 @@ export default class Authentication extends React.Component<IProps, IState> {
             </>
         )
     }
-
 }
+
+export default withRouter(Authentication);

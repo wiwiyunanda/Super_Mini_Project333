@@ -444,7 +444,7 @@ export default class Products extends React.Component<IProps, IState> {
                   </td>
 
                   <td className="px-6 py-4">
-                    {prod.variant.category.initial}/{prod.variant.initial}
+                    {prod.variant?.category.initial}/{prod.variant?.initial}
                   </td>
                   <td className="px-6 py-4">
                     {prod.initial}/{prod.name}

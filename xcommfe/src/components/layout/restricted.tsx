@@ -5,7 +5,7 @@ export class Restricted extends React.Component {
         return (
             <div>
                 <h3>Restricted form</h3>
-                <p>Please Login!!!</p>
+                {/* <p>Please login!</p> */}
             </div>
         )
     }

@@ -108,19 +108,70 @@ export default class Gallery extends React.Component<IProps, IState> {
     reader.readAsDataURL(file);
 
     reader.onload = () => {
-      this.setState({
-        gallery: {
-          ...this.state.gallery,
-          base64Big: reader.result,
-          base64Small: reader.result,
-        },
-      });
-    };
+      // const img = new Image();
+      // img.src = event.target.result.toString();
+      this.resizeImage(reader.result, 512, 512)
+          .then(result => {
+              this.setState({
+                  gallery: {
+                      ...this.state.gallery,
+                      base64Big: result,
+                  }
+              })
+              this.resizeImage(reader.result, 128, 128)
+                  .then(resultSmall => {
+                      this.setState({
+                          gallery: {
+                              ...this.state.gallery,
+                              base64Small: resultSmall
+                          }
+                      })
+                      console.log(result, resultSmall);
+                  }).catch(error => {
+                      alert(error);
+                  })
+          }).catch(error => {
+              alert(error);
+          })
+
+  };
+
 
     reader.onerror = (error) => {
       console.log("Error: ", error);
     };
   };
+
+  resizeImage = (base64Str: any, maxWidth: number = 512, maxHeight: number = 512) => {
+    return new Promise((resolve) => {
+        let img = new Image()
+        img.src = base64Str
+        img.onload = () => {
+            let canvas = document.createElement('canvas')
+            const MAX_WIDTH = maxWidth
+            const MAX_HEIGHT = maxHeight
+            let width = img.width
+            let height = img.height
+
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width
+                    width = MAX_WIDTH
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width *= MAX_HEIGHT / height
+                    height = MAX_HEIGHT
+                }
+            }
+            canvas.width = width
+            canvas.height = height
+            let ctx: any = canvas.getContext('2d')
+            ctx.drawImage(img, 0, 0, width, height)
+            resolve(canvas.toDataURL())
+        }
+    })
+  }
 
   submitHandler = async () => {
     const { command, gallery } = this.state;
