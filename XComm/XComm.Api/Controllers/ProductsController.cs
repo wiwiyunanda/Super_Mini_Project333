@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ViewModel;
 using XComm.Api.DataModel;
 using XComm.Api.Repositories;
+using XComm.Api.Security;
 
 namespace XComm.Api.Controllers
 {
@@ -17,6 +18,7 @@ namespace XComm.Api.Controllers
         }
 
         [HttpPost]
+        [ReadableBodyStream(Roles = "Administrator,Products")]
         public async Task<ProductsViewModel> Post(ProductsViewModel model)
         {
             return _repo.Create(model);
@@ -35,19 +37,22 @@ namespace XComm.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [ReadableBodyStream(Roles = "Administrator,Products")]
         public async Task<ProductsViewModel> Put(long id, ProductsViewModel model)
         {
             model.Id = id;
             return _repo.Update(model);
         }
 
-        [HttpPut("changestatus/{id}")]  
+        [HttpPut("changestatus/{id}")]
+        [ReadableBodyStream(Roles = "Administrator,Products")]
         public async Task<ProductsViewModel> Put(long id, bool status)
         {
             return _repo.ChangeStatus(id, status);
         }
 
         [HttpPut("changeGallery/{id}/{galleryId}")]
+        [ReadableBodyStream(Roles = "Administrator,Products")]
         public async Task<ProductsViewModel> ChangeGallery(long id, long galleryId)
         {
             return _repo.ChangeGallery(id, galleryId);

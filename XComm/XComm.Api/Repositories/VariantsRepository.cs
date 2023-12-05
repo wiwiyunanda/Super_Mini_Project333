@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ViewModel;
 using XComm.Api.DataModel;
+using XComm.Api.Security;
 
 namespace XComm.Api.Repositories
 {
@@ -27,7 +28,7 @@ namespace XComm.Api.Repositories
                 {
                     entity.Active = status;
 
-                    entity.ModifiedBy = "Ika";
+                    entity.ModifiedBy = ClaimsContext.UserName();
                     entity.ModifiedDate = DateTime.Now;
 
                     _dbContext.SaveChanges();
@@ -64,7 +65,7 @@ namespace XComm.Api.Repositories
                 entity.Name = model.Name; 
                 entity.Active = model.Active;
 
-                entity.CreatedBy = "Ika";
+                entity.CreatedBy = ClaimsContext.UserName();
                 entity.CreatedDate = DateTime.Now;
 
                 _dbContext.Variants.Add(entity);
@@ -243,7 +244,7 @@ namespace XComm.Api.Repositories
                     entity.Initial = model.Initial;
                     entity.Name = model.Name;
 
-                    entity.ModifiedBy = "Ika";
+                    entity.ModifiedBy = ClaimsContext.UserName();
                     entity.ModifiedDate = DateTime.Now;
 
                     _dbContext.SaveChanges();

@@ -66,10 +66,10 @@ namespace XComm.Api.Controllers
             return token;
         }
 
-        [HttpPost("Register")]
-        public async Task<AccountViewModel> Post(RegisterViewModel model)
-        {
-            return _repo.Register(model);
-        }
+        //[HttpPost("Register")]
+        //public async Task<AccountViewModel> Post(RegisterViewModel model)
+        //{
+        //    return _repo.Register(model);
+        //}
     }
 }

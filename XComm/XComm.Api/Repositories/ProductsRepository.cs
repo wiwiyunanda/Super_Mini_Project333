@@ -1,5 +1,6 @@
 ﻿using ViewModel;
 using XComm.Api.DataModel;
+using XComm.Api.Security;
 
 namespace XComm.Api.Repositories
 {
@@ -24,7 +25,7 @@ namespace XComm.Api.Repositories
                 if (entity != null)
                 {
                     entity.Active = status;
-                    entity.ModifiedBy = "Ika";
+                    entity.ModifiedBy = ClaimsContext.UserName();
                     entity.ModifiedDate = DateTime.Now;
 
                     _dbContext.SaveChanges();
@@ -70,7 +71,7 @@ namespace XComm.Api.Repositories
                 entity.Stock = model.Stock;
                 entity.Active = model.Active;
 
-                entity.CreatedBy = "Ika";
+                entity.CreatedBy = ClaimsContext.UserName();
                 entity.CreatedDate = DateTime.Now;
 
                 _dbContext.Products.Add(entity);
@@ -186,7 +187,7 @@ namespace XComm.Api.Repositories
             {
                 // Filter Search
                 var query = _dbContext.Products
-                    .Where(o => o.Initial.Contains(search) || o.Name.Contains(search)) ;
+                    .Where(o => o.Initial.Contains(search) || o.Name.Contains(search) || o.Description.Contains(search));
 
                 int count = query.Count();
 
@@ -274,7 +275,7 @@ namespace XComm.Api.Repositories
                     entity.Price = model.Price;
                     entity.Stock = model.Stock;
 
-                    entity.ModifiedBy = "Ika";
+                    entity.ModifiedBy = ClaimsContext.UserName();
                     entity.ModifiedDate = DateTime.Now;
 
                     _dbContext.SaveChanges();

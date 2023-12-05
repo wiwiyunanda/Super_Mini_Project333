@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ViewModel;
 using XComm.Api.DataModel;
 using XComm.Api.Repositories;
+using XComm.Api.Security;
 
 namespace XComm.Api.Controllers
 {
@@ -17,6 +18,7 @@ namespace XComm.Api.Controllers
         }
 
         [HttpPost]
+        [ReadableBodyStream(Roles = "Administrator,Orders")]
         public async Task<OrderHeaderViewModel> Post(OrderHeaderViewModel model)
         {
             return _repo.Create(model);

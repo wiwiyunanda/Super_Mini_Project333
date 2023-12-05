@@ -1,6 +1,7 @@
 ﻿using ViewModel;
 using XComm.Api.DataModel;
- 
+using XComm.Api.Security;
+
 namespace XComm.Api.Repositories
 {
     public class CategoryRepository : IRepository<CategoryViewModel>
@@ -27,7 +28,7 @@ namespace XComm.Api.Repositories
                 {
                     entity.Active = status;
 
-                    entity.ModifiedBy = "Ika";
+                    entity.ModifiedBy = ClaimsContext.UserName();
                     entity.ModifiedDate = DateTime.Now;
 
                     _dbContext.SaveChanges();
@@ -63,7 +64,7 @@ namespace XComm.Api.Repositories
                 entity.Name = model.Name;
                 entity.Active = model.Active;
 
-                entity.CreatedBy = "Ika";
+                entity.CreatedBy = ClaimsContext.UserName();
                 entity.CreatedDate = DateTime.Now;
 
                 _dbContext.Categories.Add(entity);
@@ -136,6 +137,7 @@ namespace XComm.Api.Repositories
             try
             {
                 //filter by search
+                //Console.WriteLine(ClaimsContext.UserName());
                 var query = _dbContext.Categories
                     .Where(o => o.Initial.Contains(search) || o.Name.Contains(search));
 
@@ -202,7 +204,7 @@ namespace XComm.Api.Repositories
                     entity.Initial = model.Initial;
                     entity.Name = model.Name;
 
-                    entity.ModifiedBy = "Ika";
+                    entity.ModifiedBy = ClaimsContext.UserName();
                     entity.ModifiedDate = DateTime.Now;
 
                     _dbContext.SaveChanges();

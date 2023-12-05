@@ -1,5 +1,6 @@
 ﻿using ViewModel;
 using XComm.Api.DataModel;
+using XComm.Api.Security;
 
 namespace XComm.Api.Repositories
 {
@@ -35,7 +36,7 @@ namespace XComm.Api.Repositories
 
                     //entOh.Amount = model.Amount;
 
-                    entOh.CreatedBy = "Ika";
+                    entOh.CreatedBy = ClaimsContext.UserName();
                     entOh.CreatedDate = DateTime.Now;
 
                     _dbContext.OrderHeaders.Add(entOh);
@@ -52,7 +53,7 @@ namespace XComm.Api.Repositories
                         entOd.Price = item.Price;
                         entOd.Quantity = item.Quantity;
 
-                        entOd.CreatedBy = "Ika";
+                        entOd.CreatedBy = ClaimsContext.UserName();
                         entOd.CreatedDate = DateTime.Now;
 
                         _dbContext.OrderDetails.Add(entOd);

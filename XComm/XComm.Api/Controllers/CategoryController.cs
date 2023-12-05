@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using ViewModel;
 using XComm.Api.DataModel;
 using XComm.Api.Repositories;
+using XComm.Api.Security;
 
 namespace XComm.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class CategoryController : ControllerBase
     {
         private CategoryRepository _repo; /*= new CategoryRepository();*/
@@ -17,6 +19,7 @@ namespace XComm.Api.Controllers
         }
 
         [HttpPost]
+        [ReadableBodyStream(Roles = "Administrator,Categories")]
         public async Task<CategoryViewModel> Post(CategoryViewModel model)
         {
             return _repo.Create(model);
@@ -35,6 +38,7 @@ namespace XComm.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [ReadableBodyStream(Roles = "Administrator,Categories")]
         public async Task<CategoryViewModel> Put(long id, CategoryViewModel model)
         {
             model.Id = id;
@@ -42,6 +46,7 @@ namespace XComm.Api.Controllers
         }
 
         [HttpPut("changestatus/{id}/{status}")]
+        [ReadableBodyStream(Roles = "Administrator,Categories")]
         public async Task<CategoryViewModel> Put(long id,bool status)
         {
             return _repo.ChangeStatus(id, status);

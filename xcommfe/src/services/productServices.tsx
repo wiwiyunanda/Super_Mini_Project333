@@ -6,7 +6,7 @@ import { IPagination } from "../interfaces/iPagination";
 export const ProductService = {
   getAll: () => {
     const result = axios
-      .get(config.apiUrl + "/Products")
+      .get(config.apiUrl + '/Products/' , {headers: config.headers()})
       .then((respons) => {
         // console.log(respons);
         return {
@@ -26,7 +26,7 @@ export const ProductService = {
   post: (products: IProduct) => {
     const { variant, ...newProduct } = products;
     const result = axios
-      .post(config.apiUrl + "/Products", newProduct)
+      .post(config.apiUrl + '/Products/', newProduct , {headers: config.headers()})
       .then((respons) => {
         // console.log(respons);
         return {
@@ -45,7 +45,7 @@ export const ProductService = {
 
   update: (id: number, products: IProduct) => {
     const result = axios
-      .put(config.apiUrl + "/Products/" + id, products)
+      .put(config.apiUrl + '/Products/' + id, products , {headers: config.headers()})
       .then((respons) => {
         // console.log(respons);
         return {
@@ -64,7 +64,7 @@ export const ProductService = {
 
   changeStatus: (id: number, status: boolean) => {
     const result = axios
-      .put(config.apiUrl + `/Products/changestatus/${id}?status=${status}`)
+      .put(config.apiUrl + `/Products/changestatus/${id}?status=${status}` , null, {headers: config.headers()})
       .then((respons) => {
         // console.log(respons);
         return {
@@ -83,7 +83,7 @@ export const ProductService = {
 
   getById: (id: number) => {
     const result = axios
-      .get(config.apiUrl + "/Products/" + id)
+      .get(config.apiUrl + '/Products/' + id , {headers: config.headers()})
       .then((respons) => {
         return {
           success: respons.status === 200,
@@ -104,7 +104,7 @@ export const ProductService = {
     const result = axios
       .get(
         config.apiUrl +
-          `/Products?pageNum=${pg.pageNum}&rows=${pg.rows}${searchStr}&orderBy=${pg.orderBy}&sort=${pg.sort}`
+          `/Products?pageNum=${pg.pageNum}&rows=${pg.rows}${searchStr}&orderBy=${pg.orderBy}&sort=${pg.sort}` , {headers: config.headers()}
       )
       .then((respons) => {
         console.log(respons);
@@ -126,7 +126,7 @@ export const ProductService = {
 
   changeGallery: (id: number, galleryId: number) => {
     const result = axios
-      .put(config.apiUrl + `/Products/changeGallery/${id}/${galleryId}`)
+      .put(config.apiUrl + `/Products/changeGallery/${id}/${galleryId}` , {headers: config.headers()})
       .then((respons) => {
         console.log(respons);
         return {

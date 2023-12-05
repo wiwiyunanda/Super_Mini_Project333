@@ -21,4 +21,9 @@ namespace ViewModel
         public decimal Quantity { get; set; }
         public decimal Price { get; set; }
     }
+
+    public class CartViewModel: ProductsViewModel
+    {
+        public decimal Quantity { get; set; }
+    }
 }

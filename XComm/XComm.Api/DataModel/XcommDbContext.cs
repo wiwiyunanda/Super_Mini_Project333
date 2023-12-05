@@ -21,6 +21,7 @@ namespace XComm.Api.DataModel
         public DbSet<Gallery> Galleries { get; set; }
         public DbSet<RoleGroup> RoleGroups { get; set; }
         public DbSet<AuthorizationGroup> AuthorizationGroups { get; set; }
+        public DbSet<Cart> Carts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -129,6 +130,10 @@ namespace XComm.Api.DataModel
             modelBuilder.Entity<RoleGroup>()
                 .HasIndex(o => o.GroupName)
                 .IsUnique();
+
+            modelBuilder.Entity<Cart>()
+                .Property(o => o.Quantity)
+                .HasColumnType("decimal(18,4)");
         }
     }
 

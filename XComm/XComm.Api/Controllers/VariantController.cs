@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ViewModel;
 using XComm.Api.DataModel;
 using XComm.Api.Repositories;
+using XComm.Api.Security;
 
 namespace XComm.Api.Controllers
 {
@@ -17,6 +18,7 @@ namespace XComm.Api.Controllers
         }
 
         [HttpPost]
+        [ReadableBodyStream(Roles = "Administrator,Variants")]
         public async Task<VariantsViewModel> Post(VariantsViewModel model)
         {
             return _repo.Create(model);
@@ -41,6 +43,7 @@ namespace XComm.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [ReadableBodyStream(Roles = "Administrator,Variants")]
         public async Task<VariantsViewModel> Put(long id, VariantsViewModel model)
         {
             model.Id = id;
@@ -48,6 +51,7 @@ namespace XComm.Api.Controllers
         }
 
         [HttpPut("changestatus/{id}/{status}")]
+        [ReadableBodyStream(Roles = "Administrator,Variants")]
         public async Task<VariantsViewModel> Put(long id, bool status)
         {
             return _repo.ChangeStatus(id, status);

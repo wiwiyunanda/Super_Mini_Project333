@@ -6,7 +6,7 @@ import { IPagination } from '../interfaces/iPagination';
 export const CategoryService = {
     getAll: (pg: IPagination) => {
         const searchStr = pg.search.length > 0 ? `&search=${pg.search}`: ``;
-        const result = axios.get(config.apiUrl + `/category?pageNum=${pg.pageNum}&rows=${pg.rows}${searchStr}&orderBy=${pg.orderBy}&sort=${pg.sort}`)
+        const result = axios.get(config.apiUrl + `/category?pageNum=${pg.pageNum}&rows=${pg.rows}${searchStr}&orderBy=${pg.orderBy}&sort=${pg.sort}`, {headers: config.headers()})
         .then(respons => {
             console.log(respons);
             return {
@@ -26,11 +26,11 @@ export const CategoryService = {
     },
 
     getById: (id: number) => {
-        const result = axios.get(config.apiUrl + '/category/' + id)
+        const result = axios.get(config.apiUrl + '/category/' + id , {headers: config.headers()})
         .then(respons => {
             return {
                 success : respons.status == 200,
-                result :respons.data,
+                result :respons.data
             };
         })
         .catch((error) => {
@@ -43,7 +43,7 @@ export const CategoryService = {
     },
 
     post: (category : ICategory) => {
-        const result = axios.post(config.apiUrl + '/category/', category)
+        const result = axios.post(config.apiUrl + '/category/', category , {headers: config.headers()})
         .then(respons => {
            // console.log(respons);
             return {
@@ -61,7 +61,7 @@ export const CategoryService = {
     },
 
     update: (id:number, category : ICategory) => {
-        const result = axios.put(config.apiUrl + '/category/' + id, category)
+        const result = axios.put(config.apiUrl + '/category/' + id, category , {headers: config.headers()})
         .then(respons => {
            console.log(respons);
             return {
@@ -79,7 +79,7 @@ export const CategoryService = {
     },
 
     changeStatus: (id:number, status : boolean) => {
-        const result = axios.put(config.apiUrl + `/category/changestatus/${id}/${status}`)
+        const result = axios.put(config.apiUrl + `/category/changestatus/${id}/${status}` ,null, {headers: config.headers()})
         .then(respons => {
            console.log(respons);
             return {

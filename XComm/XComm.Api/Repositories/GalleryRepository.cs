@@ -1,5 +1,6 @@
 ﻿using ViewModel;
 using XComm.Api.DataModel;
+using XComm.Api.Security;
 
 namespace XComm.Api.Repositories
 {
@@ -26,7 +27,7 @@ namespace XComm.Api.Repositories
                 entity.Base64Small = model.Base64Small;
                 entity.Active = model.Active;
 
-                entity.CreatedBy = "Ika";
+                entity.CreatedBy = ClaimsContext.UserName();
                 entity.CreatedDate = DateTime.Now;
 
                 _dbContext.Galleries.Add(entity);

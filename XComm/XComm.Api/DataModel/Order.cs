@@ -33,4 +33,18 @@ namespace XComm.Api.DataModel
         public virtual Products Product { get; set; }
 
     }
+
+    [Table("Carts")]
+    public class Cart : BaseSchema
+    {
+
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public long Id { get; set; }
+        public long ProductId { get; set; }
+        public decimal Quantity { get; set; }
+
+        [ForeignKey("ProductId")]
+        public virtual Products Product { get; set; }
+
+    }
 }

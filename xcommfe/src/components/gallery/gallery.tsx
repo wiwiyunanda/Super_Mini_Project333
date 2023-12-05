@@ -220,7 +220,7 @@ export default class Gallery extends React.Component<IProps, IState> {
                   className="border-b dark:bg-gray-800 dark:border-gray-700"
                 >
                   <td className="px-6 py-4">
-                    <img height={128} width={128} src={o.base64Big}></img>
+                    <img height={64} width={64} src={o.base64Big}></img>
                   </td>
                   <td className="px-6 py-4">{o.title}</td>
                   <td className="px-6 py-4">
